@@ -10,6 +10,7 @@ class LoginCredentials(Base):
     id = Column(Integer, primary_key=True, unique=True)
     username = Column(String(30), unique=True)
     password = Column(String(40))
+    is_active = Column(Boolean, default=True)
 
 class VehicleInfo(Base):
     __tablename__ = 'vehicle_info'

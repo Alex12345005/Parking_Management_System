@@ -1,5 +1,6 @@
-from sqlalchemy.orm import Session
+import bcrypt
 
+from sqlalchemy.orm import Session
 from . import models, schemas
 
 
@@ -24,3 +25,19 @@ def create_vehicle(db: Session, vehicle_info: schemas.VehicleInfoCreate):
     db.refresh(db_vehicle_info)
     return db_vehicle_info
 
+
+def hash_password(password: str) -> str:
+    # Generieren Sie ein sicheres Salz und verwenden Sie es zum Hashen des Passworts
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed_password.decode('utf-8')
+
+def create_user(db: Session, user_create: schemas.LoginCredentialsCreate):
+    # Hashen Sie das Passwort, bevor Sie es in der Datenbank speichern
+    hashed_password = hash_password(user_create.password)
+    
+    db_user = models.LoginCredentials(username=user_create.username, password=hashed_password, is_active=True)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user

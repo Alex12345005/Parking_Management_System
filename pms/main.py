@@ -36,3 +36,9 @@ def read_vehicle_by_id(id: int, db: Session = Depends(get_db)):
     if vehicle_info is None:
         raise HTTPException(status_code=404, detail="User not found")
     return vehicle_info
+
+
+@app.post("/login_credentials/", response_model=schemas.LoginCredentials)
+def create_user(user_create: schemas.LoginCredentialsCreate, db: Session = Depends(get_db)):
+    user = crud.create_user(db, user_create)
+    return user

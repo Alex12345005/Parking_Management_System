@@ -13,6 +13,7 @@ class LoginCredentialsCreate(LoginCredentialsBase):
 
 class LoginCredentials(LoginCredentialsBase):
     id: int
+    is_active: bool
 
     class Config:
         from_attributes = True
