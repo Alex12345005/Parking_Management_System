@@ -49,7 +49,6 @@ def get_db():
     finally:
         db.close()
 
-
 @app.post("/post_vehicle/", response_model=schemas.Vehicle)
 def create_vehicle_info(vehicle_info: schemas.VehicleCreate, db: Session = Depends(get_db)):
     """
@@ -64,7 +63,6 @@ def create_vehicle_info(vehicle_info: schemas.VehicleCreate, db: Session = Depen
     """
     created_vehicle_info = crud.create_vehicle(db, vehicle_info)
     return created_vehicle_info
-
 
 @app.get("/get_vehicle/", response_model=list[schemas.Vehicle])
 def read_vehicle(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):

@@ -16,6 +16,8 @@ class VehicleBase(BaseModel):
 class VehicleCreate(BaseModel):
     owner_name: str
     license_plate: str
+    tag_id: int
+    parking_permission_id: int
 
 class Vehicle(BaseModel):
     vehicle_id: int
@@ -28,8 +30,8 @@ class Vehicle(BaseModel):
 
     class Config:
         """Configuration for Vehicle schema."""
-        from_attributes = True
         arbitrary_types_allowed = True
+        from_attributes = True
 
 # Define schema for Login Credentials
 class LoginCredentialsBase(BaseModel):
