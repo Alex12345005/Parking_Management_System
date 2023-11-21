@@ -42,7 +42,7 @@ class Vehicle(Base):
     owner_name: Mapped[str] = Column(String(30))
     license_plate: Mapped[str] = Column(String(10), unique=True)
 
-    tag_id: Mapped[int] = Column(Integer, ForeignKey('tag.tag_id'), unique=True)
+    tag_id: Mapped[int] = Column(Integer, ForeignKey('tag.tag_id'))
     tag: Mapped["Tag"] = relationship('Tag', back_populates='vehicle')
 
     parking_permission_id: Mapped[int] = Column(Integer, ForeignKey('parking_permission.parking_permission_id'))

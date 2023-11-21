@@ -1,6 +1,6 @@
 import datetime
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from .models import *
 from datetime import datetime as dt
 
@@ -10,8 +10,8 @@ from datetime import datetime as dt
 class VehicleBase(BaseModel):
     owner_name: str
     license_plate: str
-    tag_id: int
-    parking_permission_id: int
+    tag_id: Optional[int]
+    parking_permission_id: Optional[int]
 
 class VehicleCreate(BaseModel):
     owner_name: str
