@@ -44,7 +44,7 @@
 }
 
 .vehicle-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: black;
 }
 </style>
 
