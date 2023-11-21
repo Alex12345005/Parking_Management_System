@@ -7,7 +7,6 @@ from .schemas import (
     LoginCredentialsCreate, TagCreate, ParkingPermissionCreate, VehicleCreate
 )
 
-
 # 1. get_vehicle_by_id
 def get_vehicle_by_id(db: Session, vehicle_id: int):
     """
