@@ -6,10 +6,9 @@ import VehicleDisplay from './components/VehicleDisplay.vue'
 <template>
   <header>
     <div class="wrapper">
-      <VehicleDisplay/>
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/" class="link-text">Home</RouterLink>
+        <RouterLink to="/about" class="link-text">About</RouterLink>
       </nav>
     </div>
   </header>
@@ -17,6 +16,10 @@ import VehicleDisplay from './components/VehicleDisplay.vue'
 </template>
 
 <style scoped>
+.link-text {
+  color: #ff8c00;
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;

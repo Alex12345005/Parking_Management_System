@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>Vehicle Table</h2>
-    <table>
+    <table class="vehicle-table">
       <thead>
         <tr>
           <th>Vehicle ID</th>
@@ -24,6 +24,30 @@
   </div>
 </template>
 
+<style scoped>
+.vehicle-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.vehicle-table th, .vehicle-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.vehicle-table th {
+  background-color: #ff8c00; /* Orange background color */
+  color: white; /* Text color */
+  font-weight: bold; /* Bold text */
+}
+
+.vehicle-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+</style>
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
@@ -41,7 +65,7 @@ const vehicles = ref<Vehicle[]>([]);
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8000/vehicles/get_vehicle/', {
-      withCredentials: true,  // Enable sending credentials (cookies, headers) in cross-origin requests
+      withCredentials: true,
     });
     vehicles.value = response.data;
   } catch (error) {
