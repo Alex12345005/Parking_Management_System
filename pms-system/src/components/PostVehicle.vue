@@ -1,30 +1,31 @@
 <template>
     <div>
-      <button @click="openPopup" class="add-vehicle-button">Fahrzeug hinzufügen</button>
-      <div v-if="isPopupVisible" class="popup">
-        <form @submit.prevent="addVehicle">
-          <div class="form-group">
-            <label for="ownerName">Besitzername:</label>
-            <input v-model="ownerName" type="text" id="ownerName" required />
-          </div>
-  
-          <div class="form-group">
-            <label for="licensePlate">Kennzeichen:</label>
-            <input v-model="licensePlate" type="text" id="licensePlate" required />
-          </div>
-  
-          <div class="form-group">
-            <label for="tagId">Tag ID:</label>
-            <input v-model="tagId" type="number" id="tagId" required />
-          </div>
-  
-          <div class="form-group">
-            <label for="parkingPermissionId">Parkberechtigung ID:</label>
-            <input v-model="parkingPermissionId" type="number" id="parkingPermissionId" required />
-          </div>
-  
-          <button type="submit" class="post-button">Fahrzeug hinzufügen</button>
-        </form>
+      <button @click="openPopup" class="add-vehicle-button">Add Vehicle</button>      <div v-if="isPopupVisible" class="popup">
+        <div v-if="isPopupVisible" class="popup">
+          <form @submit.prevent="addVehicle">
+            <div class="form-group">
+              <label for="ownerName">Name of owner:</label>
+              <input v-model="ownerName" type="text" id="ownerName" required />
+            </div>
+    
+            <div class="form-group">
+              <label for="licensePlate">License Plate:</label>
+              <input v-model="licensePlate" type="text" id="licensePlate" required />
+            </div>
+    
+            <div class="form-group">
+              <label for="tagId">Tag ID:</label>
+              <input v-model="tagId" type="number" id="tagId" required />
+            </div>
+    
+            <div class="form-group">
+              <label for="parkingPermissionId">Parking permission ID:</label>
+              <input v-model="parkingPermissionId" type="number" id="parkingPermissionId" required />
+            </div>
+    
+            <button type="submit" class="post-button">Create & Add vehicle</button>
+          </form>
+        </div>
   
         <!-- Feedback-Element -->
         <div v-if="feedbackMessage" class="feedback">
@@ -33,50 +34,55 @@
       </div>
   
       <!-- Hintergrund-Overlay mit Blur-Effekt -->
-      <div v-if="isPopupVisible" class="background-overlay"></div>
-    </div>
+      <div v-if="isPopupVisible" class="background-overlay" @click="closePopup"></div>
+  </div>
   </template>
   
-  <script setup>
-  import { ref } from 'vue';
-  import axios from 'axios';
-  
-  const isPopupVisible = ref(false);
-  const ownerName = ref('');
-  const licensePlate = ref('');
-  const tagId = ref(0);
-  const parkingPermissionId = ref(0);
-  const feedbackMessage = ref('');
-  
-  const openPopup = () => {
-    isPopupVisible.value = true;
-    feedbackMessage.value = ''; // Reset feedback message when opening the popup
+<script setup>
+import { ref } from 'vue';
+import axios from 'axios';
+
+const isPopupVisible = ref(false);
+const ownerName = ref('');
+const licensePlate = ref('');
+const tagId = ref(0);
+const parkingPermissionId = ref(0);
+const feedbackMessage = ref('');
+
+const openPopup = () => {
+  isPopupVisible.value = true;
+  feedbackMessage.value = ''; // Reset feedback message when opening the popup
+};
+
+const closePopup = () => {
+  isPopupVisible.value = false;
+  // Optional: Zurücksetzen der Eingabefelder
+  ownerName.value = '';
+  licensePlate.value = '';
+  tagId.value = 0;
+  parkingPermissionId.value = 0;
+};
+
+const addVehicle = async () => {
+  const data = {
+    owner_name: ownerName.value,
+    license_plate: licensePlate.value,
+    tag_id: tagId.value,
+    parking_permission_id: parkingPermissionId.value,
   };
-  
-  const addVehicle = async () => {
-    const data = {
-      owner_name: ownerName.value,
-      license_plate: licensePlate.value,
-      tag_id: tagId.value,
-      parking_permission_id: parkingPermissionId.value,
-    };
-  
-    try {
-      await axios.post('http://localhost:8000/vehicles/post_vehicle/', data);
-      feedbackMessage.value = 'Fahrzeug erfolgreich hinzugefügt!';
-  
-      // Wenn das Hinzufügen erfolgreich war, setze das Popup zurück
-      isPopupVisible.value = false;
-      ownerName.value = '';
-      licensePlate.value = '';
-      tagId.value = 0;
-      parkingPermissionId.value = 0;
-    } catch (error) {
-      console.error('Fehler beim Hinzufügen des Fahrzeugs:', error);
-      feedbackMessage.value = 'Fehler beim Hinzufügen des Fahrzeugs. Bitte versuche es erneut.';
-    }
-  };
-  </script>
+
+  try {
+    await axios.post('http://localhost:8000/vehicles/post_vehicle/', data);
+    feedbackMessage.value = 'Fahrzeug erfolgreich hinzugefügt!';
+
+    // Wenn das Hinzufügen erfolgreich war, setze das Popup zurück
+    closePopup();
+  } catch (error) {
+    console.error('Fehler beim Hinzufügen des Fahrzeugs:', error);
+    feedbackMessage.value = 'Fehler beim Hinzufügen des Fahrzeugs. Bitte versuche es erneut.';
+  }
+};
+</script>
   
   <style scoped>
 
