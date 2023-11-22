@@ -86,6 +86,18 @@ def create_vehicle(db: Session, vehicle: VehicleCreate):
     db.refresh(db_vehicle)
     return db_vehicle
 
+# 6. delete_vehicle
+def delete_vehicle(db: Session, vehicle: Vehicle):
+    """
+    Delete a vehicle entry.
+
+    Args:
+        db (Session): SQLAlchemy database session.
+        vehicle (Vehicle): The vehicle entry to be deleted.
+    """
+    if vehicle:
+        db.delete(vehicle)
+        db.commit()
 
 # 6. create_user
 def create_user(db: Session, user: LoginCredentialsCreate):

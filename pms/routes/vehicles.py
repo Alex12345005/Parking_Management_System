@@ -55,3 +55,20 @@ def read_vehicle_by_id(id: int, db: Session = Depends(get_db)):
     if vehicle_info is None:
         raise HTTPException(status_code=404, detail="User not found")
     return vehicle_info
+
+@router.delete("/delete_vehicle/{id}")
+def delete_vehicle_endpoint(id: int, db: Session = Depends(get_db)):
+    vehicle = crud.get_vehicle_by_id(db, id)
+    if vehicle:
+        crud.delete_vehicle(db, vehicle)
+        return {"message": f"Vehicle with ID {id} has been deleted."}
+    else:
+        raise HTTPException(status_code=404, detail=f"Vehicle with ID {id} not found.")
+
+@router.options("/post_vehicle/", response_model=None)
+def options_post_vehicle():
+    return {}
+
+@router.options("/delete_vehicle/{id}", response_model=None)
+def options_delete_vehicle():
+    return {}

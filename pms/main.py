@@ -23,9 +23,13 @@ async def set_cors_headers(request: Request, call_next):
     response.headers["Access-Control-Allow-Headers"] = "*"
     return response
 
-@app.options("/vehicles/post_vehicle/")
-async def cre():
-    return {"allow": "POST"}, 200
+#@app.options("/vehicles/post_vehicle/")
+#async def cre():
+#    return {"allow": "POST"}, 200
+
+#@app.options("/vehicles/delete_vehicle/{vehicles_id}")
+#async def cre():
+#    return {"allow": "PUT"}, 200
 
 # Include the routers in your main app
 app.include_router(vehicles.router, prefix="/vehicles", tags=["vehicles"])

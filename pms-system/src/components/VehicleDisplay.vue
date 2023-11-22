@@ -9,6 +9,7 @@
           <th>License Plate</th>
           <th>Created At</th>
           <th>Updated At</th>
+          <th>Action</th> <!-- New column for delete buttons -->
         </tr>
       </thead>
       <tbody>
@@ -18,35 +19,14 @@
           <td>{{ vehicle.license_plate }}</td>
           <td>{{ vehicle.created_at }}</td>
           <td>{{ vehicle.updated_at }}</td>
+          <td>
+            <button @click="deleteVehicle(vehicle.vehicle_id)">Delete</button>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
-
-<style scoped>
-.vehicle-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.vehicle-table th, .vehicle-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.vehicle-table th {
-  background-color: #ff8c00; /* Orange background color */
-  color: white; /* Text color */
-  font-weight: bold; /* Bold text */
-}
-
-.vehicle-table tbody tr:nth-child(even) {
-  background-color: black;
-}
-</style>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
@@ -72,4 +52,41 @@ onMounted(async () => {
     console.error('Error fetching vehicle data:', error);
   }
 });
+
+const deleteVehicle = async (vehicleId: number) => {
+  try {
+    await axios.delete(`http://localhost:8000/vehicles/delete_vehicle/${vehicleId}`);
+    // If successful, update the list of vehicles
+    vehicles.value = vehicles.value.filter(vehicle => vehicle.vehicle_id !== vehicleId);
+  } catch (error) {
+    console.error(`Error deleting vehicle with ID ${vehicleId}:`, error);
+  }
+};
+
 </script>
+
+
+<style scoped>
+.vehicle-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.vehicle-table th, .vehicle-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.vehicle-table th {
+  background-color: #ff8c00; /* Orange background color */
+  color: white; /* Text color */
+  font-weight: bold; /* Bold text */
+}
+
+.vehicle-table tbody tr:nth-child(even) {
+  background-color: black;
+}
+</style>
+
