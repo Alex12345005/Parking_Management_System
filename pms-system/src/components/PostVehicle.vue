@@ -81,6 +81,7 @@ const addVehicle = async () => {
     console.error('Fehler beim Hinzufügen des Fahrzeugs:', error);
     feedbackMessage.value = 'Fehler beim Hinzufügen des Fahrzeugs. Bitte versuche es erneut.';
   }
+  window.location.reload();
 };
 </script>
   
