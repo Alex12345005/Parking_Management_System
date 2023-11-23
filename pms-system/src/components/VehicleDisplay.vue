@@ -9,7 +9,7 @@
           <th>License Plate</th>
           <th>Created At</th>
           <th>Updated At</th>
-          <th>Action</th> <!-- New column for delete buttons -->
+          <th>Action</th> <!-- New column for edit buttons -->
         </tr>
       </thead>
       <tbody>
@@ -20,11 +20,33 @@
           <td>{{ vehicle.created_at }}</td>
           <td>{{ vehicle.updated_at }}</td>
           <td>
-            <button @click="deleteVehicle(vehicle.vehicle_id)">Delete</button>
+            <button @click="openEditPopup(vehicle)">Edit</button>
           </td>
         </tr>
       </tbody>
     </table>
+
+    <!-- Popup for editing -->
+    <div v-if="isEditPopupVisible" class="popup">
+      <form @submit.prevent="editVehicle">
+        <!-- Editable fields -->
+        <div class="form-group">
+          <label for="editOwnerName">Owner Name:</label>
+          <input v-model="editedVehicle.owner_name" type="text" id="editOwnerName" required />
+        </div>
+        <div class="form-group">
+          <label for="editLicensePlate">License Plate:</label>
+          <input v-model="editedVehicle.license_plate" type="text" id="editLicensePlate" required />
+        </div>
+
+        <!-- Delete button within the popup -->
+        <button type="button" @click="confirmDelete">Delete</button>
+
+        <!-- Confirmation before saving changes -->
+        <button type="submit">Save Changes</button>
+        <button type="button" @click="cancelEdit">Cancel</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -41,6 +63,8 @@ interface Vehicle {
 }
 
 const vehicles = ref<Vehicle[]>([]);
+const isEditPopupVisible = ref(false);
+const editedVehicle = ref<Vehicle | null>(null);
 
 onMounted(async () => {
   try {
@@ -58,11 +82,39 @@ const deleteVehicle = async (vehicleId: number) => {
     await axios.delete(`http://localhost:8000/vehicles/delete_vehicle/${vehicleId}`);
     // If successful, update the list of vehicles
     vehicles.value = vehicles.value.filter(vehicle => vehicle.vehicle_id !== vehicleId);
+    // Close the popup after deletion
+    isEditPopupVisible.value = false;
   } catch (error) {
     console.error(`Error deleting vehicle with ID ${vehicleId}:`, error);
   }
 };
 
+const openEditPopup = (vehicle: Vehicle) => {
+  editedVehicle.value = { ...vehicle };
+  isEditPopupVisible.value = true;
+};
+
+const confirmDelete = () => {
+  const isConfirmed = window.confirm('Are you sure you want to delete this vehicle?');
+  if (isConfirmed) {
+    deleteVehicle(editedVehicle.value?.vehicle_id || 0);
+  }
+};
+
+const editVehicle = () => {
+  // Implement your edit logic here
+  // ...
+
+  // Close the popup after editing
+  isEditPopupVisible.value = false;
+};
+
+const cancelEdit = () => {
+  // Reset edited data
+  editedVehicle.value = null;
+  // Close the popup
+  isEditPopupVisible.value = false;
+};
 </script>
 
 
