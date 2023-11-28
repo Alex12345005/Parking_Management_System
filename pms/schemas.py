@@ -23,8 +23,6 @@ class Vehicle(BaseModel):
     vehicle_id: int
     owner_name: str
     license_plate: str
-    tag_id: int
-    parking_permission_id: int
     created_at: dt
     updated_at: dt
 

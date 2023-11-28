@@ -1,26 +1,25 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import VehicleDisplay from './components/VehicleDisplay.vue'
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/" class="link-text">Home</RouterLink>
+        <RouterLink to="/about" class="link-text">About</RouterLink>
       </nav>
     </div>
   </header>
-
   <RouterView />
 </template>
 
 <style scoped>
+.link-text {
+  color: #ff8c00;
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;
