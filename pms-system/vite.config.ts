@@ -12,5 +12,8 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  }
+  },
+  optimizeDeps: {
+    exclude: ['mock-aws-s3', 'aws-sdk', 'nock'],
+  },
 })
