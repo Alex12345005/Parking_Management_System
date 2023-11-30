@@ -10,6 +10,7 @@
   
         <button type="submit">Login</button>
       </form>
+      <router-link to="/registration">Don't have an account? Register here.</router-link>
     </div>
   </template>
   
@@ -47,6 +48,9 @@
           params.append('username', requestData.username);
           params.append('password', requestData.password);
   
+          const salt: AxiosResponse<{ salt: string }> = await axios.get(
+            'http://localhost:8000/users/get_salt/' + this.username
+          )
           // Make the login request
           const response: AxiosResponse<{ access_token: string }> = await axios.post(
             'http://localhost:8000/login',
@@ -75,4 +79,17 @@
     },
   });
   </script>
-  
+
+<style scoped>
+/* Style to display labels and inputs vertically */
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+</style>

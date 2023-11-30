@@ -52,11 +52,12 @@ def login(response: Response, data: OAuth2PasswordRequestForm = Depends(), db: S
 
     # Use the query_user function with the correct argument
     user = crud.get_user_by_email(db, email)
+    print("This is the User:", user)
     # Ensure user is an instance of schemas.Users
-    if user and isinstance(user, schemas.Users) and password == user.password:
+    if password == user.Password:
         access_token = manager.create_access_token(data={'sub': email})
         manager.set_cookie(response, access_token)  # Set the cookie
-        return {'access_token': access_token}
+        return {'access_token':access_token}
     else:
         raise InvalidCredentialsException
 
@@ -72,7 +73,9 @@ class NotAuthenticatedException(Exception):
 manager = LoginManager(
     SECRET,
     token_url='/login',
+    cookie_name='custom-cookie-name',
     use_cookie=True,
+    use_header=False,
     custom_exception=NotAuthenticatedException
 )
 

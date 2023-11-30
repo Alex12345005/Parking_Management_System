@@ -25,14 +25,13 @@ def hash_password(Password: str) -> str:
     return (hashed_password.decode('utf-8'), salt)
 
 def create_user(db: Session, user: UsersCreate):
-    hashed_password, salt = hash_password(user.Password)  # Assuming you have a hash_password function
+#    hashed_password, salt = hash_password(user.Password)  # Assuming you have a hash_password function
     db_user = Users(
         Username=user.Username,
-        Password=hashed_password,
-        Salt=salt,
+        Password=user.Password,
+        Salt=user.Salt,
         Email=user.Email,
         PhoneNumber=user.PhoneNumber,
-        IsAdmin=user.IsAdmin,
     )
     db.add(db_user)
     db.commit()

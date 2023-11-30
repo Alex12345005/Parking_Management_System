@@ -45,7 +45,6 @@ class UsersBase(BaseModel):
     Salt: str
     Email: str
     PhoneNumber: str
-    IsAdmin: bool
 
 class UsersCreate(UsersBase):
     """Schema for creating login credentials."""
@@ -54,7 +53,6 @@ class UsersCreate(UsersBase):
     Salt: str
     Email: str
     PhoneNumber: str
-    IsAdmin: bool
 
 class Users(UsersBase):
     """Schema for reading login credentials."""
@@ -64,7 +62,6 @@ class Users(UsersBase):
     Salt: str
     Email: str
     PhoneNumber: str
-    IsAdmin: bool
 
     class Config:
         """Configuration for LoginCredentials schema."""

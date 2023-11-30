@@ -16,7 +16,7 @@ class Users(Base):
     Email: Mapped[str] = Column(String(60), unique=True)
     PhoneNumber: Mapped[str] = Column(String(40))
 
-    IsAdmin: Mapped[bool] = Column(Boolean, default=True)
+    IsAdmin: Mapped[bool] = Column(Boolean, default=False)
 
     Vehicle: Mapped["Vehicle"] = relationship('Vehicle', uselist=False, back_populates='Users')
 

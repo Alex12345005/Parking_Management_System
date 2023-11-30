@@ -54,3 +54,7 @@ def get_salt(username: str, db: Session = Depends(get_db)):
     if salt is None:
         raise HTTPException(status_code=404, detail="Salt not found for the user")
     return salt
+
+@router.options("/post_user/", response_model=None)
+def options_post_user():
+    return {}
