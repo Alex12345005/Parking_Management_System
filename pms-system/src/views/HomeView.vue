@@ -1,17 +1,12 @@
 <!-- HomeView.vue -->
 
 <template>
-  <div>
-    <h1>Welcome to the Home View!</h1>
-    <VehicleDisplay />
-    <PostVehicle />
+  <div class="home-view">
+    <div class="content-section">
+      <VehicleDisplay />
+      <PostVehicle />
+    </div>
   </div>
-  <button
-    id="logout-button"
-    @click.prevent="handleLogout"
-  >
-    Log out
-  </button>
 </template>
 
 <script setup lang="ts">
@@ -23,3 +18,25 @@ const handleLogout = () => {
   window.location.reload();
 }
 </script>
+
+<style scoped>
+.home-view {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.divider {
+  width: 50%;
+  margin: 10px 0;
+  border: 1px solid #000;
+}
+
+.content-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
