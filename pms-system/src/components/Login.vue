@@ -1,18 +1,21 @@
 <!-- components/Login.vue -->
 <template>
-    <div>
-      <form @submit.prevent="login">
-        <label for="username">Username:</label>
-        <input v-model="username" type="text" id="username" required />
-  
-        <label for="password">Password:</label>
-        <input v-model="password" type="password" id="password" required />
-  
-        <button type="submit">Login</button>
-      </form>
-      <router-link to="/registration">Don't have an account? Register here.</router-link>
-    </div>
-  </template>
+  <div class="login-container">
+    <form @submit.prevent="login" class="login-form">
+      <label for="username">Username:</label>
+      <input v-model="username" type="text" id="username" required />
+
+      <label for="password">Password:</label>
+      <input v-model="password" type="password" id="password" required />
+
+      <button type="submit" class="login-button">Login</button>
+    </form>
+
+    <router-link to="/registration" class="registration-link">
+      Don't have an account? Register here.
+    </router-link>
+  </div>
+</template>
   
   <script lang="ts">
   import { defineComponent } from 'vue';
@@ -81,7 +84,17 @@
   </script>
 
 <style scoped>
-/* Style to display labels and inputs vertically */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.login-form {
+  width: 300px;
+}
+
 label {
   display: block;
   margin-bottom: 5px;
@@ -91,5 +104,31 @@ input {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
+}
+
+.login-button {
+  background-color: #45a049;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #00506b;
+}
+
+.registration-link {
+  margin-top: 10px;
+  color: #45a049;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.registration-link:hover {
+  color: #00506b;
 }
 </style>

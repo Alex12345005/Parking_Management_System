@@ -3,8 +3,10 @@
 <template>
   <div class="home-view">
     <div class="content-section">
-      <VehicleDisplay />
-      <PostVehicle />
+      <div class="flex-container">
+        <VehicleDisplay />
+        <PostVehicle />
+      </div>
     </div>
   </div>
 </template>
@@ -28,15 +30,16 @@ const handleLogout = () => {
   align-items: center;
 }
 
-.divider {
-  width: 50%;
-  margin: 10px 0;
-  border: 1px solid #000;
-}
-
 .content-section {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start; /* Align the items to the top of the container */
 }
+
+.flex-container {
+  display: flex;
+  flex-direction: row; /* Horizontal arrangement */
+}
+
+/* Add additional styles to adjust the layout as needed */
 </style>

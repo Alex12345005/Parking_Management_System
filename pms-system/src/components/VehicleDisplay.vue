@@ -9,20 +9,16 @@
           <th>License Plate</th>
           <th>Start Time</th>
           <th>End Time</th>
-          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(vehicle, index) in vehicles" :key="index" class="uk-background-muted" @click="selectRow(vehicle)">
-          <!-- Use uk-table-link class and uk-link-reset for clickable cells -->
-          <td class="uk-table-link uk-link-reset">{{ vehicle.VehicleID }}</td>
-          <td class="uk-table-link uk-link-reset">{{ vehicle.UsersID }}</td>
-          <td class="uk-table-link uk-link-reset">{{ vehicle.LicensePlate }}</td>
-          <td class="uk-table-link uk-link-reset">{{ vehicle.StartTime }}</td>
-          <td class="uk-table-link uk-link-reset">{{ vehicle.EndTime }}</td>
-          <td>
-            <button @click="openEditPopup(vehicle)" class="uk-button uk-button-default uk-button-small">Edit</button>
-          </td>
+        <tr v-for="(vehicle, index) in vehicles" :key="index" class="uk-background-muted">
+          <!-- Update the property names based on the new model -->
+          <td>{{ vehicle.VehicleID }}</td>
+          <td>{{ vehicle.UsersID }}</td>
+          <td>{{ vehicle.LicensePlate }}</td>
+          <td>{{ vehicle.StartTime }}</td>
+          <td>{{ vehicle.EndTime }}</td>
         </tr>
       </tbody>
     </table>
@@ -87,11 +83,6 @@ const openEditPopup = (vehicle: Vehicle) => {
   isEditPopupVisible.value = true;
 };
 
-const selectRow = (vehicle: Vehicle) => {
-  // Handle row selection logic here (e.g., highlighting the selected row)
-  openEditPopup(vehicle);
-};
-
 const confirmDelete = () => {
   const isConfirmed = window.confirm('Are you sure you want to delete this vehicle?');
   if (isConfirmed) {
@@ -115,10 +106,5 @@ const cancelEdit = () => {
 <style scoped>
 .popup {
   padding: 20px;
-}
-
-/* Add a style for highlighting the selected row */
-.vehicle-table-justify tbody tr.selected {
-  background-color: #e0e0e0;
 }
 </style>
