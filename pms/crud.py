@@ -38,14 +38,14 @@ def create_user(db: Session, user: UsersCreate):
     db.refresh(db_user)
     return db_user
 
-def get_user_by_email(db_session, email: str):
+def get_user_by_username(db_session, username: str):
     """
     Get a user by email
     :param db_session: The currently active connection to the database
     :param email: E-Mail of the user
     :return: User object or None
     """
-    return db_session.query(models.Users).filter(models.Users.Email == email).first()
+    return db_session.query(models.Users).filter(models.Users.Username == username).first()
 
 def get_user_by_id(db_session, user_id: int):
     """

@@ -47,15 +47,15 @@ async def set_cors_headers(request: Request, call_next):
 def login(response: Response, data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     print("Login post start")
     print("Received data:", data.username, data.password)  # Print the received data
-    email = data.username
+    username = data.username
     password = data.password
 
     # Use the query_user function with the correct argument
-    user = crud.get_user_by_email(db, email)
+    user = crud.get_user_by_username(db, username)
     print("This is the User:", user)
     # Ensure user is an instance of schemas.Users
     if password == user.Password:
-        access_token = manager.create_access_token(data={'sub': email})
+        access_token = manager.create_access_token(data={'sub': username})
         manager.set_cookie(response, access_token)  # Set the cookie
         return {'access_token':access_token}
     else:

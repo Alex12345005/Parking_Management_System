@@ -21,19 +21,19 @@ def create_user(user_info: schemas.UsersCreate, db: Session = Depends(get_db)):
     created_user_info = crud.create_user(db, user_info)
     return created_user_info
 
-@router.get("/get_user/{email}", response_model=schemas.Users)
-def get_user(email: str, db: Session = Depends(get_db)):
+@router.get("/get_user/{username}", response_model=schemas.Users)
+def get_user(username: str, db: Session = Depends(get_db)):
     """
-    Get user details by email.
+    Get user details by username.
 
     Args:
-        email (str): Email of the user.
+        email (str): username of the user.
         db (Session): SQLAlchemy database session.
 
     Returns:
         schemas.Users: The user details.
     """
-    user = crud.get_user_by_email(db, email)
+    user = crud.get_user_by_username(db, username)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
