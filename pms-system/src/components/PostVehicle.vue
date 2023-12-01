@@ -17,11 +17,6 @@
         <!-- Form for adding a new vehicle -->
         <form @submit.prevent="addVehicle">
           <div class="form-group">
-            <label for="vehicleId">Vehicle ID:</label>
-            <input v-model="vehicleId" type="number" id="vehicleId" class="uk-input" required />
-          </div>
-
-          <div class="form-group">
             <label for="userDropdown">User:</label>
             <!-- Dropdown for selecting a user -->
             <select v-model="userId" id="userDropdown" class="uk-select" required>
