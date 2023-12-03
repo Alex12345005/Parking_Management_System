@@ -2,6 +2,7 @@
 
 import bcrypt
 from typing import Optional
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from .models import Vehicle, Tag, ParkingPermission, Users
 from .schemas import (
@@ -71,3 +72,16 @@ def get_salt_by_username(db: Session, username: str) -> Optional[str]:
     if user:
         return user.Salt
     return None
+
+def create_tag(db: Session, tag: TagCreate):
+#    hashed_password, salt = hash_password(user.Password)  # Assuming you have a hash_password function
+    db_tag = Tag(
+        TagName=tag.TagName,
+    )
+    db.add(db_tag)
+    db.commit()
+    db.refresh(db_tag)
+    return db_tag
+
+def get_tags(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Tag).offset(skip).limit(limit).all()

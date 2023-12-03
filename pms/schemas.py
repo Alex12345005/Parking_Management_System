@@ -1,6 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from .models import *
 from datetime import datetime as dt
 
@@ -71,6 +71,7 @@ class Users(UsersBase):
 # Define schema for Tag
 class TagBase(BaseModel):
     """Base schema for creating a Tag."""
+    TagID: int
     TagName: str
 
 class TagCreate(TagBase):
@@ -79,9 +80,9 @@ class TagCreate(TagBase):
 
 class Tag(TagBase):
     """Schema for reading a Tag."""
-    tag_id: int
+    TagID: int
     TagName: str
-    Vehicle: Vehicle  # Adjusted to represent one-to-one relationship
+    Vehicle: Optional[Vehicle]  # Optional, wenn ein Tag kein zugeordnetes Fahrzeug hat
 
     class Config:
         """Configuration for Tag schema."""

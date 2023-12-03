@@ -23,7 +23,7 @@ const handleLogout = () => {
 
 <style scoped>
 .home-view {
-  min-height: 100vh;
+  min-height: 70vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
