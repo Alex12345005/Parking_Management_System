@@ -1,10 +1,6 @@
 <template>
   <div>
-    <!-- Button to open off-canvas panel -->
-    <button @click="openOffCanvas" class="uk-button uk-button-primary uk-margin-small-right">
-      <span uk-icon="plus"></span>
-    </button>
-
+    <button @click="openOffCanvas" class="uk-button uk-button-secondary uk-margin-right uk-button-small"><a href="" uk-icon="plus"></a>Vehicle</button>
     <!-- Off-canvas panel -->
     <div id="offcanvas-usage" uk-offcanvas="flip: true">
       <div class="uk-offcanvas-bar">
@@ -39,9 +35,9 @@
             <input v-model="endTime" type="datetime-local" id="endTime" class="uk-input" required />
           </div>
 
+          <!-- Dropdown for selecting a single tag -->
           <div class="form-group">
             <label for="tagDropdown">Tag:</label>
-            <!-- Dropdown for selecting a single tag -->
             <select v-model="tagId" id="tagDropdown" class="uk-select" required>
               <option v-for="tag in tags" :key="tag.tagId" :value="tag.tagId">{{ tag.tagName }}</option>
             </select>
@@ -51,14 +47,11 @@
             <label for="parkingPermissions">Parking Permissions:</label>
             <!-- Multi-choice input for parking permissions -->
             <select v-model="selectedParkingPermissions" id="parkingPermissions" class="uk-select" multiple required>
-              <option v-for="permission in parkingPermissions" :key="permission.permissionId" :value="permission.permissionId">
-                {{ permission.permissionName }}
-              </option>
             </select>
           </div>
 
           <button type="submit" class="uk-button uk-button-primary uk-button-small">
-            <span uk-icon="plus"></span> Create & Add Vehicle
+            <span uk-icon="plus"></span> Create new Vehicle
           </button>
         </form>
       </div>
@@ -72,14 +65,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
-const ownerName = ref('');
+const userId = ref(0);
 const licensePlate = ref('');
+const startTime = ref('');
+const endTime = ref('');
 const tagId = ref(0);
-const parkingPermissionId = ref(0);
+const selectedParkingPermissions = ref([]);
 const feedbackMessage = ref('');
+const tags = ref([]);
+const users = ref([]);  // You need to provide the users data
 
 const openOffCanvas = () => {
   // Reset feedback message when opening the off-canvas panel
@@ -90,59 +87,64 @@ const openOffCanvas = () => {
 
 const closeOffCanvas = () => {
   // Optional: Zurücksetzen der Eingabefelder
-  ownerName.value = '';
+  userId.value = 0;
   licensePlate.value = '';
+  startTime.value = '';
+  endTime.value = '';
   tagId.value = 0;
-  parkingPermissionId.value = 0;
+  selectedParkingPermissions.value = [];
 
   // Close the off-canvas panel
   UIkit.offcanvas('#offcanvas-usage').hide();
 };
 
-const addVehicle = async () => {
-  const data = {
-    owner_name: ownerName.value,
-    license_plate: licensePlate.value,
-    tag_id: tagId.value,
-    parking_permission_id: parkingPermissionId.value,
-  };
-
+// Funktion zum Laden der Tags
+const loadTags = async () => {
   try {
-    await axios.post('http://localhost:8000/vehicles/post_vehicle/', data);
-    feedbackMessage.value = 'Vehicle added successfully!';
-
-    // Wenn das Hinzufügen erfolgreich war, schließe das Off-Canvas-Panel
-    closeOffCanvas();
+    const response = await axios.get('http://localhost:8000/tags/get_tags_name/');
+    console.log('Tags data:', response.data);
+    tags.value = response.data;
   } catch (error) {
-    console.error('Error adding vehicle:', error);
-    feedbackMessage.value = 'Error adding vehicle. Please try again.';
+    console.error('Error loading tags:', error);
   }
-  window.location.reload();
 };
+
+// Beim Laden der Komponente die Tags laden
+onMounted(() => {
+  loadTags();
+});
 </script>
 
 <style scoped>
 .feedback {
-  margin-top: 10px;
-  color: #ff0000; /* Rote Farbe für Fehlermeldung, optional */
-}
+    margin-top: 10px;
+    color: #ff0000;
+  }
 
-.uk-button-primary {
-  background-color: #45a049; /* Blau für Hintergrundfarbe des Primary Buttons */
-}
+  .uk-button-primary {
+    background-color: #45a049;
+  }
 
-.uk-button-primary:hover {
-  background-color: #00506b; /* Dunkleres Blau beim Hover */
-}
+  .uk-button-primary:hover {
+    background-color: #00506b;
+  }
 
-.uk-button-small {
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; /* Smooth Hover-Effekt */
-}
+  .uk-button-small {
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
-.uk-input {
-  margin-top: 5px;
-}
+  .uk-input {
+    margin-top: 5px;
+  }
+
+  #tagDropdown {
+    color: black;
+  }
+
+  #offcanvas-usage #tagDropdown {
+    color: black;
+  }
 </style>

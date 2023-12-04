@@ -9,7 +9,7 @@ from datetime import datetime as dt
 # Define schema for Vehicle
 class VehicleBase(BaseModel):
     LicensePlate: str
-    UserID: int
+    UsersID: int
     TagID: int
     PermissionID: int
     StartTime: datetime
@@ -17,7 +17,7 @@ class VehicleBase(BaseModel):
 
 class VehicleCreate(BaseModel):
     LicensePlate: str
-    UserID: int
+    UsersID: int
     TagID: int
     PermissionID: int
     StartTime: datetime
@@ -26,7 +26,7 @@ class VehicleCreate(BaseModel):
 class Vehicle(BaseModel):
     VehicleID: int
     LicensePlate: str
-    UserID: int
+    UsersID: int
     TagID: int
     PermissionID: int
     StartTime: datetime
@@ -82,7 +82,7 @@ class Tag(TagBase):
     """Schema for reading a Tag."""
     TagID: int
     TagName: str
-    Vehicle: Optional[Vehicle]  # Optional, wenn ein Tag kein zugeordnetes Fahrzeug hat
+    Vehicle: Optional[Vehicle] 
 
     class Config:
         """Configuration for Tag schema."""

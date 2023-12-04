@@ -26,7 +26,6 @@ def hash_password(Password: str) -> str:
     return (hashed_password.decode('utf-8'), salt)
 
 def create_user(db: Session, user: UsersCreate):
-#    hashed_password, salt = hash_password(user.Password)  # Assuming you have a hash_password function
     db_user = Users(
         Username=user.Username,
         Password=user.Password,
@@ -74,7 +73,6 @@ def get_salt_by_username(db: Session, username: str) -> Optional[str]:
     return None
 
 def create_tag(db: Session, tag: TagCreate):
-#    hashed_password, salt = hash_password(user.Password)  # Assuming you have a hash_password function
     db_tag = Tag(
         TagName=tag.TagName,
     )
@@ -83,5 +81,36 @@ def create_tag(db: Session, tag: TagCreate):
     db.refresh(db_tag)
     return db_tag
 
+def create_parking_permission(db: Session, permission: ParkingPermissionCreate):
+    db_permission = ParkingPermission(
+        PermissionType=permission.PermissionType,
+    )
+    db.add(db_permission)
+    db.commit()
+    db.refresh(db_permission)
+    return db_permission
+
 def get_tags(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Tag).offset(skip).limit(limit).all()
+
+def get_tags_by_name(db: Session, skip: int = 0, limit: int = 100):
+    tags = db.query(models.Tag.TagName).offset(skip).limit(limit).all()
+    tag_names = [tag[0] for tag in tags]
+    return tag_names
+
+def create_vehicle(db: Session, vehicle: VehicleCreate):
+    db_vehicle = Vehicle(
+        LicensePlate=vehicle.LicensePlate,
+        UsersID=vehicle.UsersID,  # Ändern Sie dies von 'UserID' auf 'UsersID'
+        TagID=vehicle.TagID,
+        PermissionID=vehicle.PermissionID,
+        StartTime=vehicle.StartTime,
+        EndTime=vehicle.EndTime
+    )
+    db.add(db_vehicle)
+    db.commit()
+    db.refresh(db_vehicle)
+    return db_vehicle
+
+def get_vehicles(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Vehicle).offset(skip).limit(limit).all()

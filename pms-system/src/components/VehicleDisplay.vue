@@ -7,40 +7,26 @@
           <th>Vehicle ID</th>
           <th>User ID</th>
           <th>License Plate</th>
+          <th>Tag ID</th>
+          <th>Permission ID</th>
           <th>Start Time</th>
           <th>End Time</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(vehicle, index) in vehicles" :key="index" class="uk-background-muted">
-          <!-- Update the property names based on the new model -->
-          <td>{{ vehicle.VehicleID }}</td>
-          <td>{{ vehicle.UsersID }}</td>
-          <td>{{ vehicle.LicensePlate }}</td>
-          <td>{{ vehicle.StartTime }}</td>
-          <td>{{ vehicle.EndTime }}</td>
+          <td style="color: black">{{ vehicle.VehicleID }}</td>
+          <td style="color: black">{{ vehicle.UsersID }}</td> <!-- Update property name to UsersID -->
+          <td style="color: black">{{ vehicle.LicensePlate }}</td>
+          <td style="color: black">{{ vehicle.TagID }}</td>
+          <td style="color: black">{{ vehicle.PermissionID }}</td>
+          <td style="color: black">{{ vehicle.StartTime }}</td>
+          <td style="color: black">{{ vehicle.EndTime }}</td>
         </tr>
       </tbody>
     </table>
-
-    <!-- Popup for editing -->
-    <div v-if="isEditPopupVisible" class="popup uk-padding-small">
-      <form @submit.prevent="editVehicle">
-        <div class="form-group">
-          <label for="editLicensePlate">License Plate:</label>
-          <!-- Update the v-model based on the new model -->
-          <input v-model="editedVehicle.LicensePlate" type="text" id="editLicensePlate" class="uk-input" required />
-        </div>
-
-        <!-- Add other form fields based on the new model -->
-
-        <button type="submit" class="uk-button uk-button-primary uk-button-small">Save Changes</button>
-        <button type="button" @click="cancelEdit" class="uk-button uk-button-secondary uk-button-small">Cancel</button>
-      </form>
-    </div>
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
@@ -49,6 +35,8 @@ interface Vehicle {
   VehicleID: number;
   UsersID: number;
   LicensePlate: string;
+  TagID: number; // Add TagID
+  PermissionID: number; // Add PermissionID
   StartTime: string;
   EndTime: string;
 }
@@ -59,52 +47,17 @@ const editedVehicle = ref<Vehicle | null>(null);
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8000/vehicles/get_vehicle/', {
+    const response = await axios.get('http://localhost:8000/vehicles/get_vehicles/', {
       withCredentials: true,
     });
     vehicles.value = response.data;
+    console.log('API Response:', response.data);
   } catch (error) {
     console.error('Error fetching vehicle data:', error);
   }
 });
-
-const deleteVehicle = async (vehicleId: number) => {
-  try {
-    await axios.delete(`http://localhost:8000/vehicles/delete_vehicle/${vehicleId}`);
-    vehicles.value = vehicles.value.filter(vehicle => vehicle.VehicleID !== vehicleId);
-    isEditPopupVisible.value = false;
-  } catch (error) {
-    console.error(`Error deleting vehicle with ID ${vehicleId}:`, error);
-  }
-};
-
-const openEditPopup = (vehicle: Vehicle) => {
-  editedVehicle.value = { ...vehicle };
-  isEditPopupVisible.value = true;
-};
-
-const confirmDelete = () => {
-  const isConfirmed = window.confirm('Are you sure you want to delete this vehicle?');
-  if (isConfirmed) {
-    deleteVehicle(editedVehicle.value?.VehicleID || 0);
-  }
-};
-
-const editVehicle = () => {
-  // Implement your edit logic here
-  // ...
-
-  isEditPopupVisible.value = false;
-};
-
-const cancelEdit = () => {
-  editedVehicle.value = null;
-  isEditPopupVisible.value = false;
-};
 </script>
 
 <style scoped>
-.popup {
-  padding: 20px;
-}
+
 </style>
