@@ -11,7 +11,7 @@ class VehicleBase(BaseModel):
     LicensePlate: str
     UsersID: int
     TagID: int
-    PermissionID: Optional[int]
+    PermissionID: int
     StartTime: datetime
     EndTime: datetime
 
@@ -19,7 +19,7 @@ class VehicleCreate(BaseModel):
     LicensePlate: str
     UsersID: int
     TagID: int
-    PermissionID: Optional[int]
+    PermissionID: int
     StartTime: datetime
     EndTime: datetime
 

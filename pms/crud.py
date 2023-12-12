@@ -101,7 +101,7 @@ def get_tags_by_name(db: Session, skip: int = 0, limit: int = 100):
 def create_vehicle(db: Session, vehicle: VehicleCreate):
     db_vehicle = Vehicle(
         LicensePlate=vehicle.LicensePlate,
-        UsersID=vehicle.UsersID,  # Ändern Sie dies von 'UserID' auf 'UsersID'
+        UsersID=vehicle.UsersID,  
         TagID=vehicle.TagID,
         PermissionID=vehicle.PermissionID,
         StartTime=vehicle.StartTime,

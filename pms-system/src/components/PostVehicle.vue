@@ -14,7 +14,7 @@
         <h3>Add Vehicle</h3>
 
         <!-- Form for adding a new vehicle -->
-        <form @submit.prevent="addVehicle">
+        <form @submit.prevent="postVehicle">
           <div class="form-group">
             <label for="userDropdown">Users:</label>
             <select v-model="userId" id="userDropdown" class="uk-select" required>
@@ -50,16 +50,15 @@
           <div class="form-group">
             <label for="parkingPermissions">Parking Permissions:</label>
             <div>
-              <!-- Radio buttons for parking permissions -->
-              <div v-for="permission in parkingPermissions" :key="permission.id">
+              <div v-for="(permission, index) in parkingPermissions" :key="permission.PermissionType">
                 <input
-                  type="radio"
-                  :id="'permission' + permission.id"
-                  :value="permission.id"
-                  v-model="selectedParkingPermissions"
+                  @input="updateSelectedPermissions(permission.PermissionID)"
+                  type="checkbox"
+                  :id="'permission' + permission.PermissionType"
+                  :value="permission.PermissionType"
                   name="parkingPermission"
                 />
-                <label :for="'permission' + permission.id">{{ permission.PermissionType }}</label>
+                <label :for="'permission' + permission.PermissionType">{{ permission.PermissionType }}</label>
               </div>
             </div>
           </div>
@@ -111,7 +110,6 @@ const closeOffCanvas = () => {
   UIkit.offcanvas('#offcanvas-usage').hide();
 };
 
-// Function to load users
 const loadUsers = async () => {
   try {
     const response = await axios.get('http://localhost:8000/users/get_users/');
@@ -143,6 +141,42 @@ const loadParkingPermissions = async () => {
     parkingPermissions.value = response.data;
   } catch (error) {
     console.error('Error loading parking permissions:', error);
+  }
+};
+
+const updateSelectedPermissions = (permissionType) => {
+  console.log('Before update:', selectedParkingPermissions.value);
+
+  if (selectedParkingPermissions.value.includes(permissionType)) {
+    selectedParkingPermissions.value.splice(selectedParkingPermissions.value.indexOf(permissionType), 1);
+  } else {
+    selectedParkingPermissions.value.push(permissionType);
+  }
+
+  console.log('After update:', selectedParkingPermissions.value);
+};
+
+const postVehicle = async () => {
+  try {
+    console.log(selectedParkingPermissions.value)
+    const response = await axios.post('http://localhost:8000/vehicles/post_vehicle/', {
+      UsersID: userId.value,
+      LicensePlate: licensePlate.value,
+      StartTime: startTime.value,
+      EndTime: endTime.value,
+      TagID: tagId.value,
+      PermissionID: selectedParkingPermissions.value,
+    });
+
+    // Handle the response as needed (e.g., show a success message, update UI, etc.)
+    console.log('Vehicle created:', response.data);
+    feedbackMessage.value = 'Vehicle created successfully';
+
+    // You may also close the off-canvas panel or perform other actions as needed
+    closeOffCanvas();
+  } catch (error) {
+    console.error('Error creating vehicle:', error);
+    feedbackMessage.value = 'Error creating vehicle';
   }
 };
 
