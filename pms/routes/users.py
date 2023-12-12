@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from typing import Optional
 from .. import crud, schemas, models
 from ..database import get_db
+from typing import List
+
 
 router = APIRouter()
     
@@ -55,6 +57,26 @@ def get_salt(username: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Salt not found for the user")
     return salt
 
+@router.get("/get_users/", response_model=List[schemas.Users])
+def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """
+    Retrieve a list of vehicles with optional pagination.
+
+    Args:
+        skip (int): Number of items to skip.
+        limit (int): Number of items to retrieve.
+        db (Session): SQLAlchemy database session.
+
+    Returns:
+        List[schemas.Vehicle]: List of retrieved vehicles.
+    """
+    users = crud.get_users(db, skip=skip, limit=limit)
+    return users
+
 @router.options("/post_user/", response_model=None)
 def options_post_user():
+    return {}
+
+@router.options("/get_users/", response_model=None)
+def options_get_user():
     return {}

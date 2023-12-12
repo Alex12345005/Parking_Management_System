@@ -4,6 +4,7 @@ from datetime import datetime
 
 from .database import Base
 from sqlalchemy.orm import Mapped
+from typing import Optional
 
 class Users(Base):
     """Model representing the login credentials."""
@@ -57,7 +58,7 @@ class Vehicle(Base):
     UsersID: Mapped[int] = Column(Integer, ForeignKey('users.UserID'))
     Users: Mapped["Users"] = relationship('Users', back_populates='Vehicle')
     
-    PermissionID: Mapped[int] = Column(Integer, ForeignKey('parking_permission.PermissionID'))
+    PermissionID: Mapped[Optional[int]] = Column(Integer, ForeignKey('parking_permission.PermissionID'), nullable=True)
     ParkingPermission: Mapped["ParkingPermission"] = relationship('ParkingPermission', back_populates='Vehicle')
 
 

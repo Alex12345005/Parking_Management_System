@@ -1,6 +1,9 @@
 <template>
   <div>
-    <button @click="openOffCanvas" class="uk-button uk-button-secondary uk-margin-right uk-button-small"><a href="" uk-icon="plus"></a>Vehicle</button>
+    <button @click="openOffCanvas" class="uk-button uk-button-secondary uk-margin-right uk-button-small">
+      <a href="" uk-icon="plus"></a> Vehicle
+    </button>
+
     <!-- Off-canvas panel -->
     <div id="offcanvas-usage" uk-offcanvas="flip: true">
       <div class="uk-offcanvas-bar">
@@ -13,10 +16,10 @@
         <!-- Form for adding a new vehicle -->
         <form @submit.prevent="addVehicle">
           <div class="form-group">
-            <label for="userDropdown">User:</label>
-            <!-- Dropdown for selecting a user -->
+            <label for="userDropdown">Users:</label>
             <select v-model="userId" id="userDropdown" class="uk-select" required>
-              <option v-for="user in users" :key="user.userId" :value="user.userId">{{ user.userName }}</option>
+              <option value="">Select a User</option>
+              <option v-for="user in users" :key="user.UserID" :value="user.UserID">{{ user.Username }}</option>
             </select>
           </div>
 
@@ -39,15 +42,26 @@
           <div class="form-group">
             <label for="tagDropdown">Tag:</label>
             <select v-model="tagId" id="tagDropdown" class="uk-select" required>
-              <option v-for="tag in tags" :key="tag.tagId" :value="tag.tagId">{{ tag.tagName }}</option>
+              <option value="">Select a Tag</option>
+              <option v-for="tag in tags" :key="tag.TagID" :value="tag.TagID">{{ tag.TagName }}</option>
             </select>
           </div>
 
           <div class="form-group">
             <label for="parkingPermissions">Parking Permissions:</label>
-            <!-- Multi-choice input for parking permissions -->
-            <select v-model="selectedParkingPermissions" id="parkingPermissions" class="uk-select" multiple required>
-            </select>
+            <div>
+              <!-- Radio buttons for parking permissions -->
+              <div v-for="permission in parkingPermissions" :key="permission.id">
+                <input
+                  type="radio"
+                  :id="'permission' + permission.id"
+                  :value="permission.id"
+                  v-model="selectedParkingPermissions"
+                  name="parkingPermission"
+                />
+                <label :for="'permission' + permission.id">{{ permission.PermissionType }}</label>
+              </div>
+            </div>
           </div>
 
           <button type="submit" class="uk-button uk-button-primary uk-button-small">
@@ -73,50 +87,76 @@ const licensePlate = ref('');
 const startTime = ref('');
 const endTime = ref('');
 const tagId = ref(0);
-const selectedParkingPermissions = ref([]);
 const feedbackMessage = ref('');
 const tags = ref([]);
-const users = ref([]);  // You need to provide the users data
+const users = ref([]);
+const selectedUserName = ref('');
+const parkingPermissions = ref([]);
+const selectedParkingPermissions = ref([]);
 
 const openOffCanvas = () => {
-  // Reset feedback message when opening the off-canvas panel
   feedbackMessage.value = '';
-  // Open the off-canvas panel
+  loadUsers();
+  loadParkingPermissions();
+  selectedParkingPermissions.value = [];
   UIkit.offcanvas('#offcanvas-usage').show();
 };
 
 const closeOffCanvas = () => {
-  // Optional: Zurücksetzen der Eingabefelder
   userId.value = 0;
   licensePlate.value = '';
   startTime.value = '';
   endTime.value = '';
   tagId.value = 0;
-  selectedParkingPermissions.value = [];
-
-  // Close the off-canvas panel
   UIkit.offcanvas('#offcanvas-usage').hide();
 };
 
-// Funktion zum Laden der Tags
+// Function to load users
+const loadUsers = async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/users/get_users/');
+    users.value = response.data;
+  } catch (error) {
+    console.error('Error loading users:', error);
+  }
+};
+
+const selectUser = (user) => {
+  userId.value = user.UserID;
+  selectedUserName.value = user.userName;
+};
+
+// Function to load tags
 const loadTags = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/tags/get_tags_name/');
-    console.log('Tags data:', response.data);
+    const response = await axios.get('http://localhost:8000/tags/get_tags/');
     tags.value = response.data;
   } catch (error) {
     console.error('Error loading tags:', error);
   }
 };
 
-// Beim Laden der Komponente die Tags laden
-onMounted(() => {
+// Function to load parking permissions
+const loadParkingPermissions = async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/parking_permissions/get_parking_permissions/');
+    parkingPermissions.value = response.data;
+  } catch (error) {
+    console.error('Error loading parking permissions:', error);
+  }
+};
+
+// Call loadTags and loadParkingPermissions on component mount
+onMounted(async () => {
   loadTags();
+  loadParkingPermissions();
+  loadUsers();
 });
 </script>
 
+
 <style scoped>
-.feedback {
+  .feedback {
     margin-top: 10px;
     color: #ff0000;
   }
@@ -138,13 +178,5 @@ onMounted(() => {
 
   .uk-input {
     margin-top: 5px;
-  }
-
-  #tagDropdown {
-    color: black;
-  }
-
-  #offcanvas-usage #tagDropdown {
-    color: black;
   }
 </style>

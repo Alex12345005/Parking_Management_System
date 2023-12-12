@@ -114,3 +114,9 @@ def create_vehicle(db: Session, vehicle: VehicleCreate):
 
 def get_vehicles(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Vehicle).offset(skip).limit(limit).all()
+
+def get_users(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Users).offset(skip).limit(limit).all()
+
+def get_parking_permissions(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.ParkingPermission).offset(skip).limit(limit).all()
