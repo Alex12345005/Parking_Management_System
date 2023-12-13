@@ -19,7 +19,6 @@ class Users(Base):
 
     IsAdmin: Mapped[bool] = Column(Boolean, default=False)
 
-    Vehicle: Mapped["Vehicle"] = relationship('Vehicle', uselist=False, back_populates='Users')
 
 class Tag(Base):
     """Model representing a tag for vehicle."""
@@ -28,8 +27,6 @@ class Tag(Base):
     TagID: Mapped[int] = Column(Integer, primary_key=True)
     TagName: Mapped[str] = Column(String(30), unique=True)
 
-    # Add a one-to-one relationship with Vehicle
-    Vehicle: Mapped["Vehicle"] = relationship('Vehicle', uselist=False, back_populates='Tag')
 
 class ParkingPermission(Base):
     """Model representing parking permissions for vehicle."""
@@ -38,7 +35,18 @@ class ParkingPermission(Base):
     PermissionID: Mapped[int] = Column(Integer, primary_key=True)
     PermissionType: Mapped[str] = Column(String(30), unique=True)
 
-    Vehicle: Mapped["Vehicle"] = relationship('Vehicle', uselist=False, back_populates='ParkingPermission')
+
+class VehicleParkingPermission(Base):
+    """Model representing parking permissions for a vehicle."""
+    __tablename__ = 'vehicle_parking_permission'
+
+    VehicleParkingPermissionID = Column(Integer, primary_key=True)
+
+
+    VehicleID = Column(Integer, ForeignKey('vehicle.VehicleID'))
+
+    PermissionID = Column(Integer, ForeignKey('parking_permission.PermissionID')) 
+
 
 class Vehicle(Base):
     """Model representing a vehicle and its associated information."""
@@ -48,18 +56,13 @@ class Vehicle(Base):
     LicensePlate: Mapped[str] = Column(String(10), unique=True)
     StartTime: Mapped[str] = Column(DateTime)
     EndTime: Mapped[str] = Column(DateTime)
-
-    Log: Mapped["Log"] = relationship('Log', uselist=False, back_populates='Vehicle')
     
-    #ForeignKeys
-    TagID: Mapped[int] = Column(Integer, ForeignKey('tag.TagID'))
-    Tag: Mapped["Tag"] = relationship('Tag', back_populates='Vehicle')
+    TagID = Column(Integer, ForeignKey('tag.TagID')) 
 
-    UsersID: Mapped[int] = Column(Integer, ForeignKey('users.UserID'))
-    Users: Mapped["Users"] = relationship('Users', back_populates='Vehicle')
-    
-    PermissionID: Mapped[Optional[int]] = Column(Integer, ForeignKey('parking_permission.PermissionID'), nullable=True)
-    ParkingPermission: Mapped["ParkingPermission"] = relationship('ParkingPermission', back_populates='Vehicle')
+    UsersID = Column(Integer, ForeignKey('users.UserID')) 
+
+    PermissionID = Column(Integer, ForeignKey('parking_permission.PermissionID')) #brauchma eher nd
+
 
 
 class Log(Base):
@@ -70,6 +73,4 @@ class Log(Base):
     EntryTime: Mapped[str] = Column(DateTime)
     ExitTime: Mapped[str] = Column(DateTime)
 
-    # Add a one-to-one relationship with Vehicle
-    VehicleID: Mapped[int] = Column(Integer, ForeignKey('vehicle.VehicleID'))
-    Vehicle: Mapped["Vehicle"] = relationship('Vehicle', back_populates='Log')
+    VehicleID = Column(Integer, ForeignKey('vehicle.VehicleID')) 

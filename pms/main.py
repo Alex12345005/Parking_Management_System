@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request, Depends, HTTPException, status, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from .database import *
-from .routes import vehicles, users, tags, parking_permissions
+from .routes import vehicles, users, tags, parking_permissions, vehicle_parking_permission
 from fastapi import Depends
 from . import crud, models, schemas
 from fastapi.security import OAuth2PasswordRequestForm
@@ -14,6 +14,19 @@ from datetime import timedelta  # Import timedelta
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
+
+# Add the CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
 SECRET = 'your-super-secret-key'
 # Add the necessary configurations for the LoginManager
@@ -66,6 +79,7 @@ app.include_router(vehicles.router, prefix="/vehicles", tags=["vehicles"])
 app.include_router(users.router, prefix="/users", tags=["users"])
 app.include_router(tags.router, prefix="/tags", tags=["tags"])
 app.include_router(parking_permissions.router, prefix="/parking_permissions", tags=["parking_permissions"])
+app.include_router(vehicle_parking_permission.router, prefix="/vehicle_parking_permissions", tags=["vehicle_parking_permissions"])
 
 class NotAuthenticatedException(Exception):
     pass
@@ -98,7 +112,7 @@ def protected_route_optional(user=Depends(manager.optional)):
     
     return {'user': user}
 
-@manager.user_loader
+@manager.user_loader()
 def load_user(user_id, db: Session = Depends(get_db)):
     """
     Get a user from the db based on user ID

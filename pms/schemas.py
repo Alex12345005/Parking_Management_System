@@ -11,7 +11,7 @@ class VehicleBase(BaseModel):
     LicensePlate: str
     UsersID: int
     TagID: int
-    PermissionID: int
+    PermissionID: List[int]
     StartTime: datetime
     EndTime: datetime
 
@@ -19,7 +19,7 @@ class VehicleCreate(BaseModel):
     LicensePlate: str
     UsersID: int
     TagID: int
-    PermissionID: int
+    PermissionID: List[int]
     StartTime: datetime
     EndTime: datetime
 
@@ -28,7 +28,7 @@ class Vehicle(BaseModel):
     LicensePlate: str
     UsersID: int
     TagID: int
-    PermissionID: int
+    PermissionID: List[int]
     StartTime: datetime
     EndTime: datetime
 
@@ -82,7 +82,6 @@ class Tag(TagBase):
     """Schema for reading a Tag."""
     TagID: int
     TagName: str
-    Vehicle: Optional[Vehicle] 
 
     class Config:
         """Configuration for Tag schema."""
@@ -106,6 +105,32 @@ class ParkingPermission(ParkingPermissionBase):
 
     class Config:
         """Configuration for ParkingPermission schema."""
+        from_attributes = True
+        arbitrary_types_allowed = True
+
+
+
+class VehicleParkingPermissionBase(BaseModel):
+    """Base schema for creating a VehicleParkingPermission."""
+    VehicleParkingPermissionID: int
+    PermissionID: int
+    VehicleID: int
+
+
+class VehicleParkingPermissionCreate(VehicleParkingPermissionBase):
+    """Schema for creating a VehicleParkingPermission."""
+    PermissionID: int
+    VehicleID: int
+
+
+class VehicleParkingPermission(VehicleParkingPermissionBase):
+    """Schema for reading a VehicleParkingPermission."""
+    VehicleParkingPermissionID: int
+    PermissionID: int
+    VehicleID: int
+
+    class Config:
+        """Configuration for VehicleParkingPermission schema."""
         from_attributes = True
         arbitrary_types_allowed = True
 
