@@ -158,7 +158,7 @@ const updateSelectedPermissions = (permissionType) => {
 
 const postVehicle = async () => {
   try {
-    console.log(selectedParkingPermissions.value)
+    console.log(selectedParkingPermissions.value);
     const response = await axios.post('http://localhost:8000/vehicles/post_vehicle/', {
       UsersID: userId.value,
       LicensePlate: licensePlate.value,
@@ -174,10 +174,14 @@ const postVehicle = async () => {
 
     // You may also close the off-canvas panel or perform other actions as needed
     closeOffCanvas();
+
+    // Reload the page after successful form submission
+    
   } catch (error) {
     console.error('Error creating vehicle:', error);
     feedbackMessage.value = 'Error creating vehicle';
   }
+  window.location.reload(); 
 };
 
 // Call loadTags and loadParkingPermissions on component mount

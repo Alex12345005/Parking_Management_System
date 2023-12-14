@@ -102,21 +102,29 @@ def get_tags_by_name(db: Session, skip: int = 0, limit: int = 100):
 def create_vehicle(db: Session, vehicle: VehicleCreate):
     db_vehicle = Vehicle(
         LicensePlate=vehicle.LicensePlate,
-        UsersID=vehicle.UsersID,  
+        UsersID=vehicle.UsersID,
         TagID=vehicle.TagID,
         StartTime=vehicle.StartTime,
         EndTime=vehicle.EndTime
     )
-    for perm in vehicle.PermissionID:
-        stored_perm: ParkingPermission|None = db.query(ParkingPermission).filter(ParkingPermission.PermissionID == perm).first()
+    db.add(db_vehicle)
+    db.commit()
+    db.refresh(db_vehicle)
+
+    for perm_id in vehicle.PermissionID:
+        stored_perm: ParkingPermission | None = db.query(ParkingPermission).filter(
+            ParkingPermission.PermissionID == perm_id
+        ).first()
+
         if stored_perm is None:
             raise ValueError("One or more permissions do not exist.")
+
         db_vehicle_perm = VehicleParkingPermission(
             PermissionID=stored_perm.PermissionID,
             VehicleID=db_vehicle.VehicleID,
         )
         db.add(db_vehicle_perm)
-    db.add(db_vehicle)
+
     db.commit()
     db.refresh(db_vehicle)
     return db_vehicle
