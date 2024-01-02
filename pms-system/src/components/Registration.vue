@@ -53,24 +53,22 @@
 
         async register() {
     try {
-        // Generiere ein zufälliges Salt
+        
         const salt = this.generateRandomString(16);
 
-        // Verwende die hashPassword-Funktion im Frontend, um das Passwort zu hashen
-       // const hashedPassword = this.generateRandomString(16);
 
         const registrationData = {
             Username: this.username,
             Email: this.email,
             Password: this.password,
             PhoneNumber: this.phonenumber,
-            Salt: salt,  // Füge das generierte Salt hinzu
+            Salt: salt,  
         };
 
-        // Protokolliere die Daten, die an die API gesendet werden
+        
         console.log('Data to be sent to the API:', registrationData);
 
-        // Beachte, dass wir hier nicht auf die Antwort warten können
+       
         await axios.post('http://localhost:8000/users/post_user/', registrationData);
 
         // Handle successful registration
@@ -88,7 +86,7 @@
   </script>
   
   <style scoped>
-  /* Style to display labels and inputs vertically */
+ 
   label {
     display: block;
     margin-bottom: 5px;

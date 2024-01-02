@@ -51,13 +51,13 @@ const handleLogout = () => {
   }
   .link-text {
     color: black;
-    font-size: 18px; /* Schriftgröße erhöhen */
+    font-size: 18px; 
   }
 
   .uk-button-secondary {
     background-color: black;
     color: white;
-    font-size: 18px; /* Schriftgröße erhöhen */
+    font-size: 18px; 
   }
 
   .uk-button-secondary.uk-border-rounded {

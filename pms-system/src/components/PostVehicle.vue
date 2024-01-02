@@ -38,7 +38,7 @@
             <input v-model="endTime" type="datetime-local" id="endTime" class="uk-input" required />
           </div>
 
-          <!-- Dropdown for selecting a single tag -->
+        
           <div class="form-group">
             <label for="tagDropdown">Tag:</label>
             <select v-model="tagId" id="tagDropdown" class="uk-select" required>
@@ -70,7 +70,7 @@
       </div>
     </div>
 
-    <!-- Feedback-Element -->
+   
     <div v-if="feedbackMessage" class="feedback">
       {{ feedbackMessage }}
     </div>
@@ -172,10 +172,10 @@ const postVehicle = async () => {
     console.log('Vehicle created:', response.data);
     feedbackMessage.value = 'Vehicle created successfully';
 
-    // You may also close the off-canvas panel or perform other actions as needed
+    
     closeOffCanvas();
 
-    // Reload the page after successful form submission
+   
     
   } catch (error) {
     console.error('Error creating vehicle:', error);

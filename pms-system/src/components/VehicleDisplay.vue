@@ -16,12 +16,21 @@
       <tbody>
         <tr v-for="(vehicle, index) in vehicles" :key="index" class="uk-background-muted">
           <td style="color: black">{{ vehicle.VehicleID }}</td>
-          <td style="color: black">{{ vehicle.UsersID }}</td> <!-- Update property name to UsersID -->
+          <td style="color: black">{{ vehicle.UsersID }}</td>
           <td style="color: black">{{ vehicle.LicensePlate }}</td>
           <td style="color: black">{{ vehicle.TagID }}</td>
           <td style="color: black">{{ vehicle.PermissionID }}</td>
           <td style="color: black">{{ vehicle.StartTime }}</td>
           <td style="color: black">{{ vehicle.EndTime }}</td>
+          <td><button class="uk-button uk-button-default" type="button" uk-toggle="target: #offcanvas-flip">Open</button>
+            <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
+                <div class="uk-offcanvas-bar">
+                    <button class="uk-offcanvas-close" type="button" uk-close></button>
+                    <h3>Title</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -35,8 +44,8 @@ interface Vehicle {
   VehicleID: number;
   UsersID: number;
   LicensePlate: string;
-  TagID: number; // Add TagID
-  PermissionID: number; // Add PermissionID
+  TagID: number; 
+  PermissionID: number; 
   StartTime: string;
   EndTime: string;
 }

@@ -61,7 +61,9 @@ class Vehicle(Base):
 
     UsersID = Column(Integer, ForeignKey('users.UserID')) 
 
-    PermissionID = Column(Integer, ForeignKey('parking_permission.PermissionID')) #brauchma eher nd
+    Username = Column(Integer, ForeignKey('users.Username'))
+
+    PermissionID = Column(Integer, ForeignKey('parking_permission.PermissionID'))
 
 
 
