@@ -22,12 +22,64 @@
           <td style="color: black">{{ vehicle.PermissionID }}</td>
           <td style="color: black">{{ vehicle.StartTime }}</td>
           <td style="color: black">{{ vehicle.EndTime }}</td>
-          <td><button class="uk-button uk-button-default" type="button" uk-toggle="target: #offcanvas-flip">Open</button>
+          <td><button class="uk-button uk-button-default" type="button" uk-toggle="target: #offcanvas-flip">✏️</button>
             <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
                 <div class="uk-offcanvas-bar">
                     <button class="uk-offcanvas-close" type="button" uk-close></button>
-                    <h3>Title</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <h3>Edit Vehicle</h3>
+                    <form @submit.prevent="postVehicle">
+                      <div class="form-group">
+                        <label for="userDropdown">Users:</label>
+                        <select v-model="userId" id="userDropdown" class="uk-select" required>
+                          <option value="">Select a User</option>
+                          <option v-for="user in users" :key="user.UserID" :value="user.UserID">{{ user.Username }}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="licensePlate">License Plate:</label>
+                        <input v-model="licensePlate" type="text" id="licensePlate" class="uk-input" required />
+                      </div>
+
+                      <div class="form-group">
+                        <label for="startTime">Start Time:</label>
+                        <input v-model="startTime" type="datetime-local" id="startTime" class="uk-input" required />
+                      </div>
+
+                      <div class="form-group">
+                        <label for="endTime">End Time:</label>
+                        <input v-model="endTime" type="datetime-local" id="endTime" class="uk-input" required />
+                      </div>
+
+                    
+                      <div class="form-group">
+                        <label for="tagDropdown">Tag:</label>
+                        <select v-model="tagId" id="tagDropdown" class="uk-select" required>
+                          <option value="">Select a Tag</option>
+                          <option v-for="tag in tags" :key="tag.TagID" :value="tag.TagID">{{ tag.TagName }}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="parkingPermissions">Parking Permissions:</label>
+                        <div>
+                          <div v-for="(permission, index) in parkingPermissions" :key="permission.PermissionType">
+                            <input
+                              @input="updateSelectedPermissions(permission.PermissionID)"
+                              type="checkbox"
+                              :id="'permission' + permission.PermissionType"
+                              :value="permission.PermissionType"
+                              name="parkingPermission"
+                            />
+                            <label :for="'permission' + permission.PermissionType">{{ permission.PermissionType }}</label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button type="submit" class="uk-button uk-button-primary uk-button-small">
+                        <span uk-icon="plus"></span> Create new Vehicle
+                      </button>
+                    </form>
                 </div>
             </div>
           </td>
