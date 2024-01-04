@@ -77,7 +77,7 @@
                       </div>
 
                       <button type="submit" class="uk-button uk-button-primary uk-button-small">
-                        <span uk-icon="plus"></span> Create new Vehicle
+                        <span uk-icon="plus"></span> Update Vehicle
                       </button>
                     </form>
                 </div>
