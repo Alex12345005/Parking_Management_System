@@ -7,7 +7,8 @@ from datetime import datetime as dt
 
 
 # Define schema for Vehicle
-class VehicleBase(BaseModel):
+class Vehicle(BaseModel):
+    VehicleID: int
     LicensePlate: str
     UsersID: int
     TagID: int
@@ -22,6 +23,14 @@ class VehicleCreate(BaseModel):
     PermissionID: List[int]
     StartTime: datetime
     EndTime: datetime
+
+class VehicleUpdate(BaseModel):
+    LicensePlate: Optional[str] = None
+    UsersID: Optional[int] = None
+    TagID: Optional[int] = None
+    PermissionID: Optional[List[int]] = None
+    StartTime: Optional[datetime] = None
+    EndTime: Optional[datetime] = None
 
 class Vehicle(BaseModel):
     VehicleID: int

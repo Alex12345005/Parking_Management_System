@@ -1,7 +1,8 @@
 """Module defining CRUD (Create, Read, Update, Delete) operations for the parking management system."""
 
 import bcrypt
-from typing import Optional
+import json
+from typing import Optional, List
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from .models import Vehicle, Tag, ParkingPermission, Users, VehicleParkingPermission
@@ -158,3 +159,32 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 def get_parking_permissions(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.ParkingPermission).offset(skip).limit(limit).all()
+
+def update_vehicle(db: Session, vehicle_id: int, vehicle_update: schemas.VehicleUpdate):
+    print("DB 1")
+    db_vehicle = db.query(models.Vehicle).filter(models.Vehicle.VehicleID == vehicle_id).first()
+    print("DB 2")
+    if db_vehicle is None:
+        return None
+
+    for var, value in vars(vehicle_update).items():
+        if value is not None and var != "PermissionID":
+            setattr(db_vehicle, var, value)    
+    
+    # TODO
+    # In der kreuztabelle alle einträge für das fahrzeug löschen
+    # neue einträge für das fahrzeug aus vehicle_update.permissions erzeugen
+
+    db.commit()
+    
+    perm_id = []
+    vehicle_id = db_vehicle.VehicleID
+    db_vehicle_perms:list[models.VehicleParkingPermission] = db.query(models.VehicleParkingPermission).filter(models.VehicleParkingPermission.VehicleID == vehicle_id).all()
+    for db_perm in db_vehicle_perms:
+        perm_id.append(db_perm.PermissionID)
+    api_vehicle = schemas.Vehicle(VehicleID=vehicle_id, LicensePlate=db_vehicle.LicensePlate, UsersID=db_vehicle.UsersID, TagID=db_vehicle.TagID, StartTime=db_vehicle.StartTime, EndTime=db_vehicle.EndTime, PermissionID=perm_id.copy())
+
+    return api_vehicle
+
+def get_vehicle_by_id(db: Session, vehicle_id: int):
+    return db.query(models.Vehicle).filter(models.Vehicle.VehicleID == vehicle_id).first()
