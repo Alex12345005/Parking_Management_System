@@ -1,9 +1,18 @@
 <template>
   <div class="about">
-    <div>
-      <h1>This is an about page</h1>
+    <div class="fixed-header">
+      <h1 class="about-title">Graphs</h1>
     </div>
-    <apexchart width="380" type="donut" :options="chartOptions" :series="series"></apexchart>
+    <div class="chart-wrapper">
+      <div class="chart-container" uk-accordion>
+        <li class="uk-open">
+          <a class="uk-accordion-title" href="#">Percentage of each Tag</a>
+          <div class="uk-accordion-content">
+            <apexchart width="380" type="donut" :options="chartOptions" :series="series"></apexchart>
+          </div>
+        </li>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -70,11 +79,61 @@ export default {
 </script>
 
 <style>
+.about {
+  padding-top: 2rem;
+  text-align: center;
+}
+
+.fixed-header {
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 1rem 0;
+  z-index: 10;
+}
+
+.about-title {
+  margin-bottom: 2rem;
+  color: #333;
+  font-size: 2.5rem;
+}
+
+.chart-wrapper {
+  padding: 1rem;
+  background-color: #f5f5f5; /* Hellgrauer Hintergrund */
+  margin-top: 2rem; /* Abstand von der Überschrift */
+}
+
+.chart-container {
+  max-width: 480px; /* Maximalbreite für das Akkordeon */
+  margin: 0 auto; /* Zentriere das Akkordeon */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Etwas Schatten für Tiefe */
+  border-radius: 8px; /* Abgerundete Ecken */
+  overflow: hidden; /* Verhindert, dass der Inhalt über die Grenzen hinausragt */
+  background: white; /* Weißer Hintergrund für das Akkordeon */
+}
+
+.uk-accordion-title {
+  font-size: 1.25rem; /* Größere Schriftart für die Titel */
+  color: #444; /* Dunkle Schriftfarbe */
+}
+
+.uk-accordion-content {
+  padding: 1rem; /* Etwas Innenabstand */
+}
+
 @media (min-width: 1024px) {
   .about {
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    flex-direction: column; /* Stackt Elemente vertikal */
+    justify-content: flex-start; /* Inhalte oben beginnen */
+    align-items: center; /* Zentriere Inhalte horizontal */
+  }
+
+  .chart-wrapper {
+    width: 100%; /* Volle Breite innerhalb des .about-Containers */
+    max-width: 640px; /* Maximalbreite für die Diagramm-Box */
   }
 }
 </style>
