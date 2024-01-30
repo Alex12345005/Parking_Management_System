@@ -1,30 +1,45 @@
-import datetime
+from datetime import datetime
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from .models import *
 from datetime import datetime as dt
 
 
 
 # Define schema for Vehicle
-class VehicleBase(BaseModel):
-    owner_name: str
-    license_plate: str
-    tag_id: int
-    parking_permission_id: int
+class Vehicle(BaseModel):
+    VehicleID: int
+    LicensePlate: str
+    UsersID: int
+    TagID: int
+    PermissionID: List[int]
+    StartTime: datetime
+    EndTime: datetime
 
 class VehicleCreate(BaseModel):
-    owner_name: str
-    license_plate: str
-    tag_id: int
-    parking_permission_id: int
+    LicensePlate: str
+    UsersID: int
+    TagID: int
+    PermissionID: List[int]
+    StartTime: datetime
+    EndTime: datetime
+
+class VehicleUpdate(BaseModel):
+    LicensePlate: Optional[str] = None
+    UsersID: Optional[int] = None
+    TagID: Optional[int] = None
+    PermissionID: Optional[List[int]] = None
+    StartTime: Optional[datetime] = None
+    EndTime: Optional[datetime] = None
 
 class Vehicle(BaseModel):
-    vehicle_id: int
-    owner_name: str
-    license_plate: str
-    created_at: dt
-    updated_at: dt
+    VehicleID: int
+    LicensePlate: str
+    UsersID: int
+    TagID: int
+    PermissionID: List[int]
+    StartTime: datetime
+    EndTime: datetime
 
     class Config:
         """Configuration for Vehicle schema."""
@@ -32,20 +47,30 @@ class Vehicle(BaseModel):
         from_attributes = True
 
 # Define schema for Login Credentials
-class LoginCredentialsBase(BaseModel):
+class UsersBase(BaseModel):
     """Base schema for creating login credentials."""
-    username: str
-    password: str
+    Username: str
+    Password: str
+    Salt: str
+    Email: str
+    PhoneNumber: str
 
-class LoginCredentialsCreate(LoginCredentialsBase):
+class UsersCreate(UsersBase):
     """Schema for creating login credentials."""
-    username: str
-    password: str
+    Username: str
+    Password: str
+    Salt: str
+    Email: str
+    PhoneNumber: str
 
-class LoginCredentials(LoginCredentialsBase):
+class Users(UsersBase):
     """Schema for reading login credentials."""
-    id: int
-    is_active: bool
+    UserID: int
+    Username: str
+    Password: str
+    Salt: str
+    Email: str
+    PhoneNumber: str
 
     class Config:
         """Configuration for LoginCredentials schema."""
@@ -55,16 +80,17 @@ class LoginCredentials(LoginCredentialsBase):
 # Define schema for Tag
 class TagBase(BaseModel):
     """Base schema for creating a Tag."""
-    tag_name: str
+    TagID: int
+    TagName: str
 
 class TagCreate(TagBase):
     """Schema for creating a Tag."""
-    tag_name: str
+    TagName: str
 
 class Tag(TagBase):
     """Schema for reading a Tag."""
-    tag_id: int
-    vehicle: Vehicle  # Adjusted to represent one-to-one relationship
+    TagID: int
+    TagName: str
 
     class Config:
         """Configuration for Tag schema."""
@@ -74,19 +100,68 @@ class Tag(TagBase):
 # Define schema for ParkingPermission
 class ParkingPermissionBase(BaseModel):
     """Base schema for creating a ParkingPermission."""
-    start_time: dt
-    end_time: dt
+    PermissionType: str
 
 class ParkingPermissionCreate(ParkingPermissionBase):
     """Schema for creating a ParkingPermission."""
-    start_time: dt
-    end_time: dt
+    PermissionType: str
+
 
 class ParkingPermission(ParkingPermissionBase):
     """Schema for reading a ParkingPermission."""
-    parking_permission_id: int
+    PermissionID: int
+    PermissionType: str
 
     class Config:
         """Configuration for ParkingPermission schema."""
+        from_attributes = True
+        arbitrary_types_allowed = True
+
+
+
+class VehicleParkingPermissionBase(BaseModel):
+    """Base schema for creating a VehicleParkingPermission."""
+    VehicleParkingPermissionID: int
+    PermissionID: int
+    VehicleID: int
+
+
+class VehicleParkingPermissionCreate(VehicleParkingPermissionBase):
+    """Schema for creating a VehicleParkingPermission."""
+    PermissionID: int
+    VehicleID: int
+
+
+class VehicleParkingPermission(VehicleParkingPermissionBase):
+    """Schema for reading a VehicleParkingPermission."""
+    VehicleParkingPermissionID: int
+    PermissionID: int
+    VehicleID: int
+
+    class Config:
+        """Configuration for VehicleParkingPermission schema."""
+        from_attributes = True
+        arbitrary_types_allowed = True
+
+# Define schema for Log
+class LogBase(BaseModel):
+    """Base schema for creating a Log."""
+    EntryTime: datetime
+    ExitTime: datetime
+
+class LogCreate(LogBase):
+    """Schema for creating a Log."""
+    EntryTime: datetime
+    ExitTime: datetime
+
+
+class Log(LogBase):
+    """Schema for reading a Log."""
+    PermissionID: int
+    EntryTime: datetime
+    ExitTime: datetime
+
+    class Config:
+        """Configuration for Log schema."""
         from_attributes = True
         arbitrary_types_allowed = True

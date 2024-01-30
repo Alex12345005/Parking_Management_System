@@ -1,84 +1,67 @@
+<!-- app.vue -->
+
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import VehicleDisplay from './components/VehicleDisplay.vue'
+
+const handleLogout = () => {
+  localStorage.removeItem('access_token');
+  window.location.reload();
+}
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/" class="link-text">Home</RouterLink>
-        <RouterLink to="/about" class="link-text">About</RouterLink>
-      </nav>
+  <div>
+    <h1 class="uk-heading-divider">Welcome to the PM-System</h1>
+    <div class="menu-button-wrapper">
+      <button class="uk-button uk-button-secondary uk-border-rounded uk-margin-small-right" type="button" uk-toggle="target: #offcanvas-nav-primary">Nav</button>
     </div>
-  </header>
-  <RouterView />
+    <div id="offcanvas-slide" uk-offcanvas></div>
+    <div id="offcanvas-nav-primary" uk-offcanvas="overlay: true">
+      <div class="uk-offcanvas-bar uk-flex uk-flex-column">
+        <ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+          <li class="uk-active"><span uk-icon="home"></span><RouterLink to="/" class="link-text">Home</RouterLink></li>
+          <li class="uk-active"><span uk-icon="info"></span><RouterLink to="/about" class="link-text">About</RouterLink></li>
+          <li class="uk-nav-divider"></li>
+          <li><a href="#" @click.prevent="handleLogout" class="link-text">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="uk-container-expand">
+      <RouterView />
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.link-text {
-  color: #ff8c00;
-}
-
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
 @media (min-width: 1024px) {
   header {
     display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    margin: 0 auto;
+  }
+  .menu-button-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 1rem;
+  }
+  .link-text {
+    color: black;
+    font-size: 18px; 
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
+  .uk-button-secondary {
+    background-color: black;
+    color: white;
+    font-size: 18px; 
   }
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
+  .uk-button-secondary.uk-border-rounded {
+    border-radius: 10px;
   }
 }
 </style>

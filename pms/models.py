@@ -1,52 +1,78 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, TIMESTAMP, func
 from sqlalchemy.orm import relationship
-from datetime import datetime as dt, timedelta
+from datetime import datetime
 
 from .database import Base
 from sqlalchemy.orm import Mapped
+from typing import Optional
 
-class LoginCredentials(Base):
+class Users(Base):
     """Model representing the login credentials."""
-    __tablename__ = 'login_credentials'
+    __tablename__ = 'users'
 
-    id: Mapped[int] = Column(Integer, primary_key=True, unique=True)
-    username: Mapped[str] = Column(String(30), unique=True)
-    password: Mapped[str] = Column(String(40))
-    is_active: Mapped[bool] = Column(Boolean, default=True)
+    UserID: Mapped[int] = Column(Integer, primary_key=True, unique=True)
+    Username: Mapped[str] = Column(String(30), unique=True)
+    Password: Mapped[str] = Column(String(40))
+    Salt: Mapped[str] = Column(String(40))
+    Email: Mapped[str] = Column(String(60), unique=True)
+    PhoneNumber: Mapped[str] = Column(String(40))
+
+    IsAdmin: Mapped[bool] = Column(Boolean, default=False)
+
 
 class Tag(Base):
-    """Model representing a tag for vehicles."""
+    """Model representing a tag for vehicle."""
     __tablename__ = 'tag'
 
-    tag_id: Mapped[int] = Column(Integer, primary_key=True)
-    tag_name: Mapped[str] = Column(String(30), unique=True)
+    TagID: Mapped[int] = Column(Integer, primary_key=True)
+    TagName: Mapped[str] = Column(String(30), unique=True)
 
-    # Add a one-to-one relationship with Vehicle
-    vehicle: Mapped["Vehicle"] = relationship('Vehicle', uselist=False, back_populates='tag')
 
 class ParkingPermission(Base):
-    """Model representing parking permissions for vehicles."""
+    """Model representing parking permissions for vehicle."""
     __tablename__ = 'parking_permission'
 
-    parking_permission_id: Mapped[int] = Column(Integer, primary_key=True)
-    start_time: Mapped[dt] = Column(TIMESTAMP, default=func.now())
-    end_time: Mapped[dt] = Column(TIMESTAMP)
+    PermissionID: Mapped[int] = Column(Integer, primary_key=True)
+    PermissionType: Mapped[str] = Column(String(30), unique=True)
 
-    vehicle: Mapped["Vehicle"] = relationship('Vehicle', uselist=False, back_populates='parking_permission')
+
+class VehicleParkingPermission(Base):
+    """Model representing parking permissions for a vehicle."""
+    __tablename__ = 'vehicle_parking_permission'
+
+    VehicleParkingPermissionID = Column(Integer, primary_key=True)
+
+
+    VehicleID = Column(Integer, ForeignKey('vehicle.VehicleID'))
+
+    PermissionID = Column(Integer, ForeignKey('parking_permission.PermissionID')) 
+
 
 class Vehicle(Base):
     """Model representing a vehicle and its associated information."""
-    __tablename__ = 'vehicles'
+    __tablename__ = 'vehicle'
 
-    vehicle_id: Mapped[int] = Column(Integer, primary_key=True)
-    owner_name: Mapped[str] = Column(String(30))
-    license_plate: Mapped[str] = Column(String(10), unique=True)
+    VehicleID: Mapped[int] = Column(Integer, primary_key=True)
+    LicensePlate: Mapped[str] = Column(String(10), unique=True)
+    StartTime: Mapped[str] = Column(DateTime)
+    EndTime: Mapped[str] = Column(DateTime)
+    
+    TagID = Column(Integer, ForeignKey('tag.TagID')) 
 
-    tag_id: Mapped[int] = Column(Integer, ForeignKey('tag.tag_id'))
-    tag: Mapped["Tag"] = relationship('Tag', back_populates='vehicle')
+    UsersID = Column(Integer, ForeignKey('users.UserID')) 
 
-    parking_permission_id: Mapped[int] = Column(Integer, ForeignKey('parking_permission.parking_permission_id'))
-    parking_permission: Mapped["ParkingPermission"] = relationship('ParkingPermission', back_populates='vehicle')
+    Username = Column(Integer, ForeignKey('users.Username'))
 
-    created_at: Mapped[dt] = Column(DateTime, default=dt.utcnow)
-    updated_at: Mapped[dt] = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow)
+    PermissionID = Column(Integer, ForeignKey('parking_permission.PermissionID'))
+
+
+
+class Log(Base):
+    """Model representing a tag for vehicle."""
+    __tablename__ = 'log'
+
+    LogID: Mapped[int] = Column(Integer, primary_key=True)
+    EntryTime: Mapped[str] = Column(DateTime)
+    ExitTime: Mapped[str] = Column(DateTime)
+
+    VehicleID = Column(Integer, ForeignKey('vehicle.VehicleID')) 

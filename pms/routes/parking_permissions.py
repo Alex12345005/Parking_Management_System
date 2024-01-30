@@ -21,7 +21,7 @@ def create_parking_permission_endpoint(permission_create: schemas.ParkingPermiss
     return permission
 
 @router.get("/get_parking_permissions/", response_model=list[schemas.ParkingPermission])
-def get_parking_permissions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def get_parking_permission(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retrieve a list of parking permissions with optional pagination.
 
@@ -33,5 +33,9 @@ def get_parking_permissions(skip: int = 0, limit: int = 100, db: Session = Depen
     Returns:
         List[schemas.ParkingPermission]: List of retrieved parking permissions.
     """
-    permissions = crud.get_parking_permission(db, skip=skip, limit=limit)
+    permissions = crud.get_parking_permissions(db, skip=skip, limit=limit)
     return permissions
+
+@router.options("/get_parking_permissions/", response_model=None)
+def get_parking_permissions():
+    return {}

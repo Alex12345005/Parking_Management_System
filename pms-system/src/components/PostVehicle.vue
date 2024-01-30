@@ -1,148 +1,220 @@
 <template>
-    <div>
-      <button @click="openPopup" class="add-vehicle-button">Add Vehicle</button>      <div v-if="isPopupVisible" class="popup">
-        <div v-if="isPopupVisible" class="popup">
-          <form @submit.prevent="addVehicle">
-            <div class="form-group">
-              <label for="ownerName">Name of owner:</label>
-              <input v-model="ownerName" type="text" id="ownerName" required />
+  <div>
+    <button @click="openOffCanvas" class="uk-button uk-button-secondary uk-margin-right uk-button-small">
+      <a href="" uk-icon="plus"></a> Vehicle
+    </button>
+
+    <!-- Off-canvas panel -->
+    <div id="offcanvas-usage" uk-offcanvas="flip: true">
+      <div class="uk-offcanvas-bar">
+
+        <!-- Close button for off-canvas panel -->
+        <button class="uk-offcanvas-close" type="button" @click="closeOffCanvas"></button>
+
+        <h3>Add Vehicle</h3>
+
+        <!-- Form for adding a new vehicle -->
+        <form @submit.prevent="postVehicle">
+          <div class="form-group">
+            <label for="userDropdown">Users:</label>
+            <select v-model="userId" id="userDropdown" class="uk-select" required>
+              <option value="">Select a User</option>
+              <option v-for="user in users" :key="user.UserID" :value="user.UserID">{{ user.Username }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="licensePlate">License Plate:</label>
+            <input v-model="licensePlate" type="text" id="licensePlate" class="uk-input" required />
+          </div>
+
+          <div class="form-group">
+            <label for="startTime">Start Time:</label>
+            <input v-model="startTime" type="datetime-local" id="startTime" class="uk-input" required />
+          </div>
+
+          <div class="form-group">
+            <label for="endTime">End Time:</label>
+            <input v-model="endTime" type="datetime-local" id="endTime" class="uk-input" required />
+          </div>
+
+        
+          <div class="form-group">
+            <label for="tagDropdown">Tag:</label>
+            <select v-model="tagId" id="tagDropdown" class="uk-select" required>
+              <option value="">Select a Tag</option>
+              <option v-for="tag in tags" :key="tag.TagID" :value="tag.TagID">{{ tag.TagName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="parkingPermissions">Parking Permissions:</label>
+            <div>
+              <div v-for="(permission, index) in parkingPermissions" :key="permission.PermissionType">
+                <input
+                  @input="updateSelectedPermissions(permission.PermissionID)"
+                  type="checkbox"
+                  :id="'permission' + permission.PermissionType"
+                  :value="permission.PermissionType"
+                  name="parkingPermission"
+                />
+                <label :for="'permission' + permission.PermissionType">{{ permission.PermissionType }}</label>
+              </div>
             </div>
-    
-            <div class="form-group">
-              <label for="licensePlate">License Plate:</label>
-              <input v-model="licensePlate" type="text" id="licensePlate" required />
-            </div>
-    
-            <div class="form-group">
-              <label for="tagId">Tag ID:</label>
-              <input v-model="tagId" type="number" id="tagId" required />
-            </div>
-    
-            <div class="form-group">
-              <label for="parkingPermissionId">Parking permission ID:</label>
-              <input v-model="parkingPermissionId" type="number" id="parkingPermissionId" required />
-            </div>
-    
-            <button type="submit" class="post-button">Create & Add vehicle</button>
-          </form>
-        </div>
-  
-        <!-- Feedback-Element -->
-        <div v-if="feedbackMessage" class="feedback">
-          {{ feedbackMessage }}
-        </div>
+          </div>
+
+          <button type="submit" class="uk-button uk-button-primary uk-button-small">
+            <span uk-icon="plus"></span> Create new Vehicle
+          </button>
+        </form>
       </div>
-  
-      <!-- Hintergrund-Overlay mit Blur-Effekt -->
-      <div v-if="isPopupVisible" class="background-overlay" @click="closePopup"></div>
+    </div>
+
+   
+    <div v-if="feedbackMessage" class="feedback">
+      {{ feedbackMessage }}
+    </div>
   </div>
-  </template>
-  
+</template>
+
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
-const isPopupVisible = ref(false);
-const ownerName = ref('');
+const userId = ref(0);
 const licensePlate = ref('');
+const startTime = ref('');
+const endTime = ref('');
 const tagId = ref(0);
-const parkingPermissionId = ref(0);
 const feedbackMessage = ref('');
+const tags = ref([]);
+const users = ref([]);
+const selectedUserName = ref('');
+const parkingPermissions = ref([]);
+const selectedParkingPermissions = ref([]);
 
-const openPopup = () => {
-  isPopupVisible.value = true;
-  feedbackMessage.value = ''; // Reset feedback message when opening the popup
+const openOffCanvas = () => {
+  feedbackMessage.value = '';
+  loadUsers();
+  loadParkingPermissions();
+  selectedParkingPermissions.value = [];
+  UIkit.offcanvas('#offcanvas-usage').show();
 };
 
-const closePopup = () => {
-  isPopupVisible.value = false;
-  // Optional: Zurücksetzen der Eingabefelder
-  ownerName.value = '';
+const closeOffCanvas = () => {
+  userId.value = 0;
   licensePlate.value = '';
+  startTime.value = '';
+  endTime.value = '';
   tagId.value = 0;
-  parkingPermissionId.value = 0;
+  UIkit.offcanvas('#offcanvas-usage').hide();
 };
 
-const addVehicle = async () => {
-  const data = {
-    owner_name: ownerName.value,
-    license_plate: licensePlate.value,
-    tag_id: tagId.value,
-    parking_permission_id: parkingPermissionId.value,
-  };
-
+const loadUsers = async () => {
   try {
-    await axios.post('http://localhost:8000/vehicles/post_vehicle/', data);
-    feedbackMessage.value = 'Fahrzeug erfolgreich hinzugefügt!';
-
-    // Wenn das Hinzufügen erfolgreich war, setze das Popup zurück
-    closePopup();
+    const response = await axios.get('http://localhost:8000/users/get_users/');
+    users.value = response.data;
   } catch (error) {
-    console.error('Fehler beim Hinzufügen des Fahrzeugs:', error);
-    feedbackMessage.value = 'Fehler beim Hinzufügen des Fahrzeugs. Bitte versuche es erneut.';
+    console.error('Error loading users:', error);
   }
-  window.location.reload();
 };
+
+const selectUser = (user) => {
+  userId.value = user.UserID;
+  selectedUserName.value = user.userName;
+};
+
+// Function to load tags
+const loadTags = async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/tags/get_tags/');
+    tags.value = response.data;
+  } catch (error) {
+    console.error('Error loading tags:', error);
+  }
+};
+
+// Function to load parking permissions
+const loadParkingPermissions = async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/parking_permissions/get_parking_permissions/');
+    parkingPermissions.value = response.data;
+  } catch (error) {
+    console.error('Error loading parking permissions:', error);
+  }
+};
+
+const updateSelectedPermissions = (permissionType) => {
+  console.log('Before update:', selectedParkingPermissions.value);
+
+  if (selectedParkingPermissions.value.includes(permissionType)) {
+    selectedParkingPermissions.value.splice(selectedParkingPermissions.value.indexOf(permissionType), 1);
+  } else {
+    selectedParkingPermissions.value.push(permissionType);
+  }
+
+  console.log('After update:', selectedParkingPermissions.value);
+};
+
+const postVehicle = async () => {
+  try {
+    console.log(selectedParkingPermissions.value);
+    const response = await axios.post('http://localhost:8000/vehicles/post_vehicle/', {
+      UsersID: userId.value,
+      LicensePlate: licensePlate.value,
+      StartTime: startTime.value,
+      EndTime: endTime.value,
+      TagID: tagId.value,
+      PermissionID: selectedParkingPermissions.value,
+    });
+
+    // Handle the response as needed (e.g., show a success message, update UI, etc.)
+    console.log('Vehicle created:', response.data);
+    feedbackMessage.value = 'Vehicle created successfully';
+
+    
+    closeOffCanvas();
+
+   
+    
+  } catch (error) {
+    console.error('Error creating vehicle:', error);
+    feedbackMessage.value = 'Error creating vehicle';
+  }
+  window.location.reload(); 
+};
+
+// Call loadTags and loadParkingPermissions on component mount
+onMounted(async () => {
+  loadTags();
+  loadParkingPermissions();
+  loadUsers();
+});
 </script>
-  
-  <style scoped>
 
-.popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 20px;
-  border: 1px solid #ccc;
-  color: black;
-  z-index: 1000;
-}
 
-.background-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3); /* Schwarzes Overlay mit Transparenz für den Blur-Effekt */
-  backdrop-filter: blur(5px); /* Blur-Effekt */
-  z-index: 999; /* Darunterliegendes Popup überlagern */
-}
+<style scoped>
   .feedback {
     margin-top: 10px;
-    color: #ff0000; /* Rote Farbe für Fehlermeldung, optional */
+    color: #ff0000;
   }
-  
-  .add-vehicle-button {
-    background-color: #4caf50; /* Grün für Hintergrundfarbe */
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth Hover-Effekt */
-    margin-top: 15px;
+
+  .uk-button-primary {
+    background-color: #45a049;
   }
-  
-  .add-vehicle-button:hover {
-    background-color: #45a049; /* Dunkleres Grün beim Hover */
+
+  .uk-button-primary:hover {
+    background-color: #00506b;
   }
-  
-  .post-button {
-    background-color: #45a049; /* Blau für Hintergrundfarbe des Post-Buttons */
-    color: white;
+
+  .uk-button-small {
     padding: 5px 10px;
-    border: none;
-    margin-top: 5px;
-    margin-left: 5px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth Hover-Effekt */
+    transition: background-color 0.3s ease;
   }
-  
-  .post-button:hover {
-    background-color: #00506b; /* Dunkleres Blau beim Hover */
+
+  .uk-input {
+    margin-top: 5px;
   }
-  </style>
-  
+</style>

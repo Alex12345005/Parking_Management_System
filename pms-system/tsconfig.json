@@ -13,7 +13,7 @@
     "noEmit": true,
     "importHelpers": true,
     "strictPropertyInitialization": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
   },
   "include": [
     "src/**/*.ts",
