@@ -169,22 +169,37 @@ def update_vehicle(db: Session, vehicle_id: int, vehicle_update: schemas.Vehicle
 
     for var, value in vars(vehicle_update).items():
         if value is not None and var != "PermissionID":
-            setattr(db_vehicle, var, value)    
-    
-    # TODO
-    # In der kreuztabelle alle einträge für das fahrzeug löschen
-    # neue einträge für das fahrzeug aus vehicle_update.permissions erzeugen
+            setattr(db_vehicle, var, value)
+
+    db.query(models.VehicleParkingPermission).filter(models.VehicleParkingPermission.VehicleID == vehicle_id).delete()
+
+    if vehicle_update.PermissionID is not None:
+        for perm_id in vehicle_update.PermissionID:
+            new_vehicle_perm = models.VehicleParkingPermission(
+                VehicleID=vehicle_id,
+                PermissionID=perm_id
+            )
+            db.add(new_vehicle_perm)
 
     db.commit()
     
     perm_id = []
     vehicle_id = db_vehicle.VehicleID
-    db_vehicle_perms:list[models.VehicleParkingPermission] = db.query(models.VehicleParkingPermission).filter(models.VehicleParkingPermission.VehicleID == vehicle_id).all()
+    db_vehicle_perms = db.query(models.VehicleParkingPermission).filter(models.VehicleParkingPermission.VehicleID == vehicle_id).all()
     for db_perm in db_vehicle_perms:
         perm_id.append(db_perm.PermissionID)
-    api_vehicle = schemas.Vehicle(VehicleID=vehicle_id, LicensePlate=db_vehicle.LicensePlate, UsersID=db_vehicle.UsersID, TagID=db_vehicle.TagID, StartTime=db_vehicle.StartTime, EndTime=db_vehicle.EndTime, PermissionID=perm_id.copy())
+    api_vehicle = schemas.Vehicle(
+        VehicleID=vehicle_id, 
+        LicensePlate=db_vehicle.LicensePlate, 
+        UsersID=db_vehicle.UsersID, 
+        TagID=db_vehicle.TagID, 
+        StartTime=db_vehicle.StartTime, 
+        EndTime=db_vehicle.EndTime, 
+        PermissionID=perm_id.copy()
+    )
 
     return api_vehicle
+
 
 def get_vehicle_by_id(db: Session, vehicle_id: int):
     return db.query(models.Vehicle).filter(models.Vehicle.VehicleID == vehicle_id).first()
