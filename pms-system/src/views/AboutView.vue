@@ -31,25 +31,17 @@ export default {
   methods: {
     async getData() {
       try {
-        // Lade Tag-Daten
         const tagsResponse = await axios.get('http://127.0.0.1:8000/tags/get_tags/');
         const tags = tagsResponse.data;
-
-        console.log('Tag-Namen vor dem Mapping:', this.tagNames);
         
-        // FÃ¼lle Tag-Namen
         this.tagNames = tags.reduce((acc, tag) => {
           acc[tag.TagID] = tag.TagName;
           return acc;
         }, {});
 
-        console.log('Tag-Namen nach dem Mapping:', this.tagNames);
-
-        // Lade Fahrzeug-Daten
         const vehiclesResponse = await axios.get('http://127.0.0.1:8000/vehicles/get_vehicles/');
         const vehicles = vehiclesResponse.data;
 
-        // Aktualisiere Chart-Daten
         this.updateChartData(vehicles);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -57,15 +49,21 @@ export default {
     },
     updateChartData(vehicles) {
       const tagCounts = vehicles.reduce((acc, vehicle) => {
-        acc[vehicle.TagID] = (acc[vehicle.TagID] || 0) + 1;
+        const tagID = parseInt(vehicle.TagID);  
+        acc[tagID] = (acc[tagID] || 0) + 1;
         return acc;
       }, {});
 
       console.log('Tag-IDs in updateChartData:', Object.keys(tagCounts));
-      console.log('Tag-Namen in updateChartData:', this.chartOptions.labels);
+      console.log('Tag-Names:', this.tagNames);
 
-      this.chartOptions.labels = Object.keys(tagCounts).map(TagID => this.tagNames[TagID] || `Unbekanntes Tag ${TagID}`);
+      this.chartOptions = {
+        ...this.chartOptions,  
+        labels: Object.keys(tagCounts).map(tagID => this.tagNames[tagID] || `Unbekanntes Tag ${tagID}`),
+      };
       this.series = Object.values(tagCounts);
+
+      this.$forceUpdate();
     },
   },
 };
