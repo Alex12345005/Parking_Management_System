@@ -2,6 +2,7 @@
 
 <template>
   <div class="home-view">
+    <h1 class="uk-heading-divider uk-position-top-center">Welcome to the PM-System</h1>
     <div class="content-section">
       <div class="flex-container">
         <VehicleDisplay />

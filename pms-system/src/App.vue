@@ -12,7 +12,6 @@ const handleLogout = () => {
 
 <template>
   <div>
-    <h1 class="uk-heading-divider">Welcome to the PM-System</h1>
     <div class="menu-button-wrapper">
       <button class="uk-button uk-button-secondary uk-border-rounded uk-margin-small-right" type="button" uk-toggle="target: #offcanvas-nav-primary">Nav</button>
     </div>

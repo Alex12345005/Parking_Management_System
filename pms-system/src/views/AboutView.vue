@@ -1,18 +1,26 @@
 <template>
   <div class="about">
-    <div class="fixed-header">
-      <h1 class="about-title">Graphs</h1>
-    </div>
-    <div class="chart-wrapper">
-      <div class="chart-container" uk-accordion>
-        <li class="uk-open">
-          <a class="uk-accordion-title" href="#">Percentage of each Tag</a>
-          <div class="uk-accordion-content">
-            <apexchart width="380" type="donut" :options="chartOptions" :series="series"></apexchart>
-          </div>
-        </li>
+      <div class="fixed-header">
+        <h1 class="about-title uk-heading-divider uk-postition-top">Graphs</h1>
       </div>
-    </div>
+      <div class="uk-column-1-2">
+          <div class="chart-wrapper">
+            <div class="chart-container">
+              <apexchart width="500" type="donut" :options="chartOptions" :series="series"></apexchart>
+            </div>
+            <div class="chart-container">
+              <apexchart type="line" :options="lineChartOptions" :series="lineSeries"></apexchart>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <div class="chart-container">
+              <apexchart type="bar" :options="barChartOptions" :series="barSeries"></apexchart>
+            </div>
+            <div class="chart-container">
+              <apexchart type="area" :options="areaChartOptions" :series="areaSeries"></apexchart>
+            </div>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -28,10 +36,37 @@ export default {
   data() {
     return {
       chartOptions: {
-        labels: [],  // Hier sollten die Tag-Namen sein
+        labels: []
       },
       series: [],
-      tagNames: {}  
+      tagNames: {},
+      lineChartOptions: {
+        xaxis: {
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+        }
+      },
+      lineSeries: [{
+        name: 'Series 1',
+        data: [31, 40, 28, 51, 42, 109]
+      }],
+      barChartOptions: {
+        xaxis: {
+          categories: ['2015', '2016', '2017', '2018', '2019']
+        }
+      },
+      barSeries: [{
+        name: 'Series 1',
+        data: [300, 400, 300, 500, 400]
+      }],
+      areaChartOptions: {
+        xaxis: {
+          categories: ['A', 'B', 'C', 'D', 'E']
+        }
+      },
+      areaSeries: [{
+        name: 'Series 1',
+        data: [10, 15, 9, 20, 16]
+      }]
     };
   },
   mounted() {
@@ -42,15 +77,12 @@ export default {
       try {
         const tagsResponse = await axios.get('http://127.0.0.1:8000/tags/get_tags/');
         const tags = tagsResponse.data;
-        
         this.tagNames = tags.reduce((acc, tag) => {
           acc[tag.TagID] = tag.TagName;
           return acc;
         }, {});
-
         const vehiclesResponse = await axios.get('http://127.0.0.1:8000/vehicles/get_vehicles/');
         const vehicles = vehiclesResponse.data;
-
         this.updateChartData(vehicles);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -58,21 +90,14 @@ export default {
     },
     updateChartData(vehicles) {
       const tagCounts = vehicles.reduce((acc, vehicle) => {
-        const tagID = parseInt(vehicle.TagID);  
-        acc[tagID] = (acc[tagID] || 0) + 1;
+        acc[parseInt(vehicle.TagID)] = (acc[parseInt(vehicle.TagID)] || 0) + 1;
         return acc;
       }, {});
-
-      console.log('Tag-IDs in updateChartData:', Object.keys(tagCounts));
-      console.log('Tag-Names:', this.tagNames);
-
       this.chartOptions = {
         ...this.chartOptions,  
         labels: Object.keys(tagCounts).map(tagID => this.tagNames[tagID] || `Unbekanntes Tag ${tagID}`),
       };
       this.series = Object.values(tagCounts);
-
-      this.$forceUpdate();
     },
   },
 };
@@ -99,41 +124,37 @@ export default {
 }
 
 .chart-wrapper {
-  padding: 1rem;
-  background-color: #f5f5f5; /* Hellgrauer Hintergrund */
-  margin-top: 2rem; /* Abstand von der Überschrift */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  gap: 2rem;
+  padding: 4rem;
+  background-color: #f5f5f5;
 }
 
 .chart-container {
-  max-width: 480px; /* Maximalbreite für das Akkordeon */
-  margin: 0 auto; /* Zentriere das Akkordeon */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Etwas Schatten für Tiefe */
-  border-radius: 8px; /* Abgerundete Ecken */
-  overflow: hidden; /* Verhindert, dass der Inhalt über die Grenzen hinausragt */
-  background: white; /* Weißer Hintergrund für das Akkordeon */
+  flex: 1 0 50%; /* Ermöglicht zwei Diagramme pro Reihe */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .chart-container {
+    flex: 1 0 100%; /* Auf kleineren Bildschirmen wird jedes Diagramm auf 100% der Breite skaliert */
+    max-width: 100%;
+  }
 }
 
 .uk-accordion-title {
-  font-size: 1.25rem; /* Größere Schriftart für die Titel */
-  color: #444; /* Dunkle Schriftfarbe */
+  font-size: 1.25rem;
+  color: #444;
 }
 
 .uk-accordion-content {
-  padding: 1rem; /* Etwas Innenabstand */
-}
-
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column; /* Stackt Elemente vertikal */
-    justify-content: flex-start; /* Inhalte oben beginnen */
-    align-items: center; /* Zentriere Inhalte horizontal */
-  }
-
-  .chart-wrapper {
-    width: 100%; /* Volle Breite innerhalb des .about-Containers */
-    max-width: 640px; /* Maximalbreite für die Diagramm-Box */
-  }
+  padding: 1rem;
 }
 </style>
