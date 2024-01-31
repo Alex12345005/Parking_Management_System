@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <button @click="openOffCanvas" class="uk-button uk-button-secondary uk-margin-right uk-button-small">
       <a href="" uk-icon="plus"></a> Vehicle
     </button>
@@ -199,7 +199,7 @@ onMounted(async () => {
     color: #ff0000;
   }
 
-  .uk-button-primary {
+  .uk-button-secondary {
     background-color: #45a049;
   }
 
@@ -212,6 +212,8 @@ onMounted(async () => {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-left: 20px;
+    margin-top: 63px;
   }
 
   .uk-input {
