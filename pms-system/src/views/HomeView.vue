@@ -2,10 +2,13 @@
 
 <template>
   <div class="home-view">
+    <h1 class="uk-heading-divider uk-position-top-center">Welcome to the PM-System</h1>
     <div class="content-section">
-      <div class="flex-container">
+      <div class="chart-wrapper">
+        <div class="flex-container">
         <VehicleDisplay />
         <PostVehicle />
+      </div>
       </div>
     </div>
   </div>
@@ -41,5 +44,14 @@ const handleLogout = () => {
   flex-direction: row; /* Horizontal arrangement */
 }
 
-/* Add additional styles to adjust the layout as needed */
+.chart-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  gap: 2rem;
+  padding: 3rem;
+  padding-right: 0rem;
+  background-color: #f5f5f5;
+  margin-right: 0px;
+}
 </style>

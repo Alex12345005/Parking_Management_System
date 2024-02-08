@@ -1,20 +1,20 @@
 <template>
   <div>
     <h2>Vehicle Table</h2>
-    <table class="uk-table uk-table-large uk-table-hover uk-table-divider vehicle-table-justify">
+    <table class="uk-table uk-table-large uk-table-hover uk-table-divider vehicle-table-justify uk-background-tertiary">
       <thead>
         <tr>
-          <th>Vehicle ID</th>
-          <th>User ID</th>
-          <th>License Plate</th>
-          <th>Tag ID</th>
-          <th>Permission ID</th>
-          <th>Start Time</th>
-          <th>End Time</th>
+          <th style="color: black">Vehicle ID</th>
+          <th style="color: black">User ID</th>
+          <th style="color: black">License Plate</th>
+          <th style="color: black">Tag ID</th>
+          <th style="color: black">Permission ID</th>
+          <th style="color: black">Start Time</th>
+          <th style="color: black">End Time</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(vehicle, index) in vehicles" :key="index" class="uk-background-muted">
+        <tr v-for="(vehicle, index) in vehicles" :key="index" class="uk-background-default">
           <td style="color: black">{{ vehicle.VehicleID }}</td>
           <td style="color: black">{{ vehicle.UsersID }}</td>
           <td style="color: black">{{ vehicle.LicensePlate }}</td>
@@ -120,5 +120,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-
+.uk-background-tertiary{
+    background-color: #d3d3d3; 
+}
 </style>
