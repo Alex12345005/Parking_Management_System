@@ -16,13 +16,13 @@
         </thead>
         <tbody>
           <tr v-for="(vehicle, index) in vehicles" :key="index">
-            <td style="color: black">{{ vehicle.VehicleID }}</td>
-            <td style="color: black">{{ vehicle.UsersID }}</td>
-            <td style="color: black">{{ vehicle.LicensePlate }}</td>
-            <td style="color: black">{{ vehicle.TagID }}</td>
-            <td style="color: black">{{ vehicle.PermissionID }}</td>
-            <td style="color: black">{{ vehicle.StartTime }}</td>
-            <td style="color: black">{{ vehicle.EndTime }}</td>
+            <td style="font-size: 16px; color: black">{{ vehicle.VehicleID }}</td>
+            <td style="font-size: 16px; color: black">{{ vehicle.UsersID }}</td>
+            <td style="font-size: 16px; color: black">{{ vehicle.LicensePlate }}</td>
+            <td style="font-size: 16px; color: black">{{ vehicle.TagID }}</td>
+            <td style="font-size: 16px; color: black">{{ vehicle.PermissionID }}</td>
+            <td style="font-size: 16px; color: black">{{ vehicle.StartTime }}</td>
+            <td style="font-size: 16px; color: black">{{ vehicle.EndTime }}</td>
             <td><button class="uk-button uk-button-default" type="button" uk-toggle="target: #offcanvas-flip">✏️</button>
               <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
                   <div class="uk-offcanvas-bar">
