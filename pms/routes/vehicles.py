@@ -42,7 +42,7 @@ def read_vehicle(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
 def delete_vehicle_endpoint(id: int, db: Session = Depends(get_db)):
     vehicle = crud.get_vehicle_by_id(db, id)
     if vehicle:
-        crud.delete_vehicle(db, vehicle)
+        crud.delete_vehicle_by_id(db, id)
         return {"message": f"Vehicle with ID {id} has been deleted."}
     else:
         raise HTTPException(status_code=404, detail=f"Vehicle with ID {id} not found.")
