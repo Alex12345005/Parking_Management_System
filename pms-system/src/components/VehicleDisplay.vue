@@ -22,6 +22,7 @@
           <td style="color: black">{{ vehicle.PermissionID }}</td>
           <td style="color: black">{{ vehicle.StartTime }}</td>
           <td style="color: black">{{ vehicle.EndTime }}</td>
+          <td><button class="uk-button uk-button-danger" @click="deleteVehicle(vehicle.VehicleID)">🗑️</button></td>
           <td><button class="uk-button uk-button-default" type="button" uk-toggle="target: #offcanvas-flip">✏️</button>
             <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
                 <div class="uk-offcanvas-bar">
@@ -88,6 +89,7 @@
     </table>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
@@ -97,26 +99,47 @@ interface Vehicle {
   UsersID: number;
   LicensePlate: string;
   TagID: number; 
-  PermissionID: number; 
+  PermissionID: number[]; // Annahme, dass dies ein Array ist, basierend auf Ihrer Struktur
   StartTime: string;
   EndTime: string;
 }
 
 const vehicles = ref<Vehicle[]>([]);
-const isEditPopupVisible = ref(false);
-const editedVehicle = ref<Vehicle | null>(null);
 
 onMounted(async () => {
+  await fetchVehicles();
+});
+
+async function fetchVehicles() {
   try {
     const response = await axios.get('http://localhost:8000/vehicles/get_vehicles/', {
       withCredentials: true,
     });
     vehicles.value = response.data;
-    console.log('API Response:', response.data);
   } catch (error) {
     console.error('Error fetching vehicle data:', error);
   }
-});
+}
+
+async function deleteVehicle(vehicleId: number) {
+  const isConfirmed = confirm(`Are you sure you want to delete the vehicle with ID ${vehicleId}?`);
+
+  if (isConfirmed) {
+    try {
+      await axios.delete(`http://localhost:8000/vehicles/delete_vehicle/${vehicleId}`, {
+        withCredentials: true,
+      });
+      await fetchVehicles();
+      alert(`Vehicle with ID ${vehicleId} has been deleted.`);
+    } catch (error) {
+      console.error('Error deleting vehicle:', error);
+      alert('Failed to delete vehicle.');
+    }
+  }
+  else {
+    alert('Vehicle deletion cancelled.');
+  }
+}
 </script>
 
 <style scoped>
