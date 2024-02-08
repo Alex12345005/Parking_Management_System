@@ -4,14 +4,14 @@
       <table class="uk-table uk-table-hover uk-table-divider vehicle-table-justify uk-background-default">
         <thead class="sticky-header">
           <tr>
-            <th style="color: black">Vehicle ID</th>
-            <th style="color: black">User ID</th>
-            <th style="color: black">License Plate</th>
-            <th style="color: black">Tag ID</th>
-            <th style="color: black">Permission ID</th>
-            <th style="color: black">Start Time</th>
-            <th style="color: black">End Time</th>
-            <th style="color: black">Actions</th>
+            <th style="color: black; font-weight: bold; font-size: 18px;">Vehicle ID</th>
+            <th style="color: black; font-weight: bold; font-size: 18px;">User ID</th>
+            <th style="color: black; font-weight: bold; font-size: 18px;">License Plate</th>
+            <th style="color: black; font-weight: bold; font-size: 18px;">Tag ID</th>
+            <th style="color: black; font-weight: bold; font-size: 18px;">Permission ID</th>
+            <th style="color: black; font-weight: bold; font-size: 18px;">Start Time</th>
+            <th style="color: black; font-weight: bold; font-size: 18px;">End Time</th>
+            <th style="color: black; font-weight: bold; font-size: 18px;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -131,7 +131,7 @@ async function deleteVehicle(vehicleId: number) {
       await axios.delete(`http://localhost:8000/vehicles/delete_vehicle/${vehicleId}`, {
         withCredentials: true,
       });
-      await fetchVehicles(); // Fahrzeuge neu laden, um die Liste zu aktualisieren
+      await fetchVehicles(); 
       alert(`Vehicle with ID ${vehicleId} has been deleted.`);
     } catch (error) {
       console.error('Error deleting vehicle:', error);
@@ -142,25 +142,34 @@ async function deleteVehicle(vehicleId: number) {
 </script>
 
 <style scoped>
+.uk-table th, .uk-table td {
+  padding: 10px 20px; 
+  text-align: left;
+  border-right: 1px solid #ccc; 
+}
+
+.uk-table th:last-child, .uk-table td:last-child {
+  border-right: none;
+}
+
 .scrollable-table-container {
   overflow-y: auto;
-  max-height: 750px; /* Anpassen nach Bedarf */
+  max-height: 750px; 
 }
 
 .sticky-header th {
   position: sticky;
   top: 0;
-  background-color: #fff; /* Hintergrund des Headers */
-  z-index: 1; /* Stellt sicher, dass der Header über den Zeilen bleibt */
+  background-color: #fff; 
+  z-index: 2; 
 }
 
-/* Optional: Schatten oder Linie, um den Header hervorzuheben */
 .sticky-header th::after {
   content: "";
   position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
-  border-bottom: 2px solid #ccc; /* Linie unter dem Header */
+  border-bottom: 2px solid #ccc; 
 }
 </style>
