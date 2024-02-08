@@ -22,7 +22,6 @@
           <td style="color: black">{{ vehicle.PermissionID }}</td>
           <td style="color: black">{{ vehicle.StartTime }}</td>
           <td style="color: black">{{ vehicle.EndTime }}</td>
-          <td><button class="uk-button uk-button-danger" @click="deleteVehicle(vehicle.VehicleID)">🗑️</button></td>
           <td><button class="uk-button uk-button-default" type="button" uk-toggle="target: #offcanvas-flip">✏️</button>
             <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
                 <div class="uk-offcanvas-bar">
@@ -81,6 +80,7 @@
                         <span uk-icon="plus"></span> Update Vehicle
                       </button>
                     </form>
+                    <button class="uk-button uk-button-default" style="margin-top: 10px;" @click="deleteVehicle(vehicle.VehicleID)">Delete 🗑️</button>
                 </div>
             </div>
           </td>
