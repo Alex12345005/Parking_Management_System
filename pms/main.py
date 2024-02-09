@@ -15,7 +15,15 @@ from datetime import timedelta  # Import timedelta
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
-# Add the CORS middleware
+@app.middleware("http")
+async def set_cors_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Access-Control-Allow-Origin"] = "http://localhost:5173"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Methods"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    return response
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -45,15 +53,6 @@ def load_user(email: str, db: Session = Depends(get_db)):
     if user_data:
         return user_data
     return None
-
-@app.middleware("http")
-async def set_cors_headers(request: Request, call_next):
-    response = await call_next(request)
-    response.headers["Access-Control-Allow-Origin"] = "http://localhost:5173"
-    response.headers["Access-Control-Allow-Credentials"] = "true"
-    response.headers["Access-Control-Allow-Methods"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "*"
-    return response
 
 # Update the login route to use the set_cookie method
 @app.post('/login')

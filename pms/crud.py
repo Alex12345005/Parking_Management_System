@@ -203,3 +203,11 @@ def update_vehicle(db: Session, vehicle_id: int, vehicle_update: schemas.Vehicle
 
 def get_vehicle_by_id(db: Session, vehicle_id: int):
     return db.query(models.Vehicle).filter(models.Vehicle.VehicleID == vehicle_id).first()
+
+def delete_vehicle_by_id(db: Session, vehicle_id: int):
+    # Löschen aller zugehörigen VehicleParkingPermission-Einträge
+    db.query(models.VehicleParkingPermission).filter(models.VehicleParkingPermission.VehicleID == vehicle_id).delete()
+
+    # Löschen des Fahrzeugs selbst
+    db.query(models.Vehicle).filter(models.Vehicle.VehicleID == vehicle_id).delete()
+    db.commit()

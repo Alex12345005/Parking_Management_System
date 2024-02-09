@@ -1,14 +1,12 @@
-<!-- HomeView.vue -->
-
 <template>
   <div class="home-view">
     <h1 class="uk-heading-divider uk-position-top-center">Welcome to the PM-System</h1>
     <div class="content-section">
       <div class="chart-wrapper">
         <div class="flex-container">
-        <VehicleDisplay />
-        <PostVehicle />
-      </div>
+          <VehicleDisplay />
+          <PostVehicle />
+        </div>
       </div>
     </div>
   </div>
@@ -41,7 +39,19 @@ const handleLogout = () => {
 
 .flex-container {
   display: flex;
-  flex-direction: row; /* Horizontal arrangement */
+  flex-direction: row; 
+  background-color: lightgrey;
+  padding: 30px;
+  margin-top: 50px;
+  max-height: 950px;
+  position: center;
+}
+
+.fixed-top-center {
+  position: fixed; /* Oder `absolute`, je nach Anforderung */
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .chart-wrapper {
@@ -51,7 +61,7 @@ const handleLogout = () => {
   gap: 2rem;
   padding: 3rem;
   padding-right: 0rem;
-  background-color: #f5f5f5;
   margin-right: 0px;
+  background-color: white;
 }
 </style>
