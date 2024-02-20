@@ -176,7 +176,6 @@ async function updateVehicle() {
   
   try {
     const response = await axios.put(updateUrl, {
-      // Achten Sie darauf, dass die Struktur hier der erwarteten Struktur entspricht
       VehicleID: editingVehicle.value.VehicleID,
       LicensePlate: editingVehicle.value.LicensePlate,
       UsersID: editingVehicle.value.UsersID,
@@ -188,8 +187,7 @@ async function updateVehicle() {
       withCredentials: true,
     });
 
-    // Verarbeiten Sie hier die Antwort
-    await fetchVehicles(); // Aktualisieren Sie die Liste der Fahrzeuge
+    await fetchVehicles(); 
     UIkit.modal("#editVehicleModal").hide();
     alert('Vehicle updated successfully');
   } catch (error) {
@@ -232,26 +230,34 @@ async function updateVehicle() {
 }
 
 .uk-modal-dialog {
-  color: black; /* Setzt die Standardtextfarbe im gesamten Modal auf Schwarz */
+  color: black; 
 }
 
 .uk-select, .uk-input {
-  color: black; /* Stellt sicher, dass die Textfarbe in Formularelementen ebenfalls Schwarz ist */
+  color: black;
+  font-size: 17px;
 }
 
-/* Optional: Falls Sie spezifische Textelemente haben, die angepasst werden müssen */
-.uk-modal-title, label {
-  color: black; /* Stellt sicher, dass Titel und Labels im Modal Schwarz sind */
+
+.uk-modal-title {
+  color: black; 
 }
 
+.uk-modal-body .form-group {
+  margin-bottom: 20px; 
+}
+
+.uk-modal label {
+  font-size: 20px;
+}
 .custom-modal-footer {
   display: flex;
-  justify-content: space-between; /* Platziert Elemente an den gegenüberliegenden Enden des Containers */
-  align-items: center; /* Zentriert die Buttons vertikal */
+  justify-content: space-between; 
+  align-items: center; 
 }
 
 .button-group-right {
   display: flex;
-  gap: 10px; /* Fügt einen Abstand zwischen den Buttons hinzu */
+  gap: 10px;
 }
 </style>
