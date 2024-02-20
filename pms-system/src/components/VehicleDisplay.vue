@@ -23,71 +23,53 @@
             <td style="font-size: 16px; color: black">{{ vehicle.PermissionID }}</td>
             <td style="font-size: 16px; color: black">{{ vehicle.StartTime }}</td>
             <td style="font-size: 16px; color: black">{{ vehicle.EndTime }}</td>
-            <td><button class="uk-button uk-button-default" type="button" uk-toggle="target: #offcanvas-flip">✏️</button>
-              <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
-                  <div class="uk-offcanvas-bar">
-                      <button class="uk-offcanvas-close" type="button" uk-close></button>
-                      <h3>Edit Vehicle</h3>
-                      <form @submit.prevent="postVehicle">
-                        <div class="form-group">
-                          <label for="userDropdown">Users:</label>
-                          <select v-model="userId" id="userDropdown" class="uk-select" required>
-                            <option value="">Select a User</option>
-                            <option v-for="user in users" :key="user.UserID" :value="user.UserID">{{ user.Username }}</option>
-                          </select>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="licensePlate">License Plate:</label>
-                          <input v-model="licensePlate" type="text" id="licensePlate" class="uk-input" required />
-                        </div>
-
-                        <div class="form-group">
-                          <label for="startTime">Start Time:</label>
-                          <input v-model="startTime" type="datetime-local" id="startTime" class="uk-input" required />
-                        </div>
-
-                        <div class="form-group">
-                          <label for="endTime">End Time:</label>
-                          <input v-model="endTime" type="datetime-local" id="endTime" class="uk-input" required />
-                        </div>
-
-                      
-                        <div class="form-group">
-                          <label for="tagDropdown">Tag:</label>
-                          <select v-model="tagId" id="tagDropdown" class="uk-select" required>
-                            <option value="">Select a Tag</option>
-                            <option v-for="tag in tags" :key="tag.TagID" :value="tag.TagID">{{ tag.TagName }}</option>
-                          </select>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="parkingPermissions">Parking Permissions:</label>
-                          <div>
-                            <div v-for="(permission, index) in parkingPermissions" :key="permission.PermissionType">
-                              <input
-                                @input="updateSelectedPermissions(permission.PermissionID)"
-                                type="checkbox"
-                                :id="'permission' + permission.PermissionType"
-                                :value="permission.PermissionType"
-                                name="parkingPermission"
-                              />
-                              <label :for="'permission' + permission.PermissionType">{{ permission.PermissionType }}</label>
-                            </div>
-                          </div>
-                        </div>
-
-                        <button type="submit" class="uk-button uk-button-primary uk-button-small">
-                          <span uk-icon="plus"></span> Update Vehicle
-                        </button>
-                      </form>
-                      <button class="uk-button uk-button-default" style="margin-top: 10px;" @click="deleteVehicle(vehicle.VehicleID)">Delete 🗑️</button>
-                  </div>
-              </div>
-            </td>
+            <td style="font-size: 16px; color: black"><button class="uk-button uk-button-default" type="button" @click="openEditModal(vehicle)">✏️</button></td>
           </tr>
         </tbody>
       </table>
+    </div>
+<!-- Edit Modal -->
+<div id="editVehicleModal" uk-modal>
+      <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+          <h2 class="uk-modal-title">Edit Vehicle</h2>
+        </div>
+        <div class="uk-modal-body">
+          <!-- Formular für Bearbeitung -->
+          <div class="form-group">
+            <label for="userDropdown">Users:</label>
+            <select v-model="editingVehicle.UsersID" id="userDropdown" class="uk-select" required>
+              <option v-for="user in users" :key="user.UserID" :value="user.UserID">{{ user.Username }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="licensePlate">License Plate:</label>
+            <input v-model="editingVehicle.LicensePlate" type="text" id="licensePlate" class="uk-input" required />
+          </div>
+          <div class="form-group">
+            <label for="startTime">Start Time:</label>
+            <input v-model="editingVehicle.StartTime" type="datetime-local" id="startTime" class="uk-input" required />
+          </div>
+          <div class="form-group">
+            <label for="endTime">End Time:</label>
+            <input v-model="editingVehicle.EndTime" type="datetime-local" id="endTime" class="uk-input" required />
+          </div>
+          <div class="form-group">
+            <label for="tagDropdown">Tag:</label>
+            <select v-model="editingVehicle.TagID" id="tagDropdown" class="uk-select" required>
+              <option v-for="tag in tags" :key="tag.TagID" :value="tag.TagID">{{ tag.TagName }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="uk-modal-footer custom-modal-footer">
+          <button class="uk-button uk-button-danger" @click="deleteVehicle(editingVehicle.VehicleID)">Delete</button>
+          <div class="button-group-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <button class="uk-button uk-button-primary" @click="updateVehicle">Save Changes</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -106,10 +88,16 @@ interface Vehicle {
   EndTime: string;
 }
 
+const users = ref([]);
+const tags = ref([]);
+const parkingPermissions = ref([]);
 const vehicles = ref<Vehicle[]>([]);
 
 onMounted(async () => {
   await fetchVehicles();
+  await loadUsers();
+  await loadTags();
+  await loadParkingPermissions();
 });
 
 async function fetchVehicles() {
@@ -137,6 +125,76 @@ async function deleteVehicle(vehicleId: number) {
       console.error('Error deleting vehicle:', error);
       alert('Failed to delete vehicle.');
     }
+  }
+}
+
+async function loadUsers() {
+  try {
+    const response = await axios.get('http://localhost:8000/users/get_users/');
+    users.value = response.data;
+  } catch (error) {
+    console.error('Error loading users:', error);
+  }
+}
+
+async function loadTags() {
+  try {
+    const response = await axios.get('http://localhost:8000/tags/get_tags/');
+    tags.value = response.data;
+  } catch (error) {
+    console.error('Error loading tags:', error);
+  }
+}
+
+async function loadParkingPermissions() {
+  try {
+    const response = await axios.get('http://localhost:8000/parking_permissions/get_parking_permissions/');
+    parkingPermissions.value = response.data;
+  } catch (error) {
+    console.error('Error loading parking permissions:', error);
+  }
+}
+
+const editingVehicle = ref({} as Vehicle | null);
+
+function openEditModal(vehicle) {
+  editingVehicle.value = { ...vehicle };
+  UIkit.modal("#editVehicleModal").show();
+}
+
+async function updateVehicle() {
+  if (!editingVehicle.value) return;
+  
+  // Stellen Sie sicher, dass die VehicleID vorhanden ist
+  const vehicleId = editingVehicle.value.VehicleID;
+  if (!vehicleId) {
+    alert('Vehicle ID is missing');
+    return;
+  }
+
+  const updateUrl = `http://localhost:8000/vehicles/update_vehicles/${vehicleId}`;
+  
+  try {
+    const response = await axios.put(updateUrl, {
+      // Achten Sie darauf, dass die Struktur hier der erwarteten Struktur entspricht
+      VehicleID: editingVehicle.value.VehicleID,
+      LicensePlate: editingVehicle.value.LicensePlate,
+      UsersID: editingVehicle.value.UsersID,
+      TagID: editingVehicle.value.TagID,
+      PermissionID: editingVehicle.value.PermissionID,
+      StartTime: editingVehicle.value.StartTime,
+      EndTime: editingVehicle.value.EndTime,
+    }, {
+      withCredentials: true,
+    });
+
+    // Verarbeiten Sie hier die Antwort
+    await fetchVehicles(); // Aktualisieren Sie die Liste der Fahrzeuge
+    UIkit.modal("#editVehicleModal").hide();
+    alert('Vehicle updated successfully');
+  } catch (error) {
+    console.error('Error updating vehicle:', error);
+    alert(`Failed to update vehicle: ${error.message}`);
   }
 }
 </script>
@@ -171,5 +229,29 @@ async function deleteVehicle(vehicleId: number) {
   bottom: 0;
   width: 100%;
   border-bottom: 2px solid #ccc; 
+}
+
+.uk-modal-dialog {
+  color: black; /* Setzt die Standardtextfarbe im gesamten Modal auf Schwarz */
+}
+
+.uk-select, .uk-input {
+  color: black; /* Stellt sicher, dass die Textfarbe in Formularelementen ebenfalls Schwarz ist */
+}
+
+/* Optional: Falls Sie spezifische Textelemente haben, die angepasst werden müssen */
+.uk-modal-title, label {
+  color: black; /* Stellt sicher, dass Titel und Labels im Modal Schwarz sind */
+}
+
+.custom-modal-footer {
+  display: flex;
+  justify-content: space-between; /* Platziert Elemente an den gegenüberliegenden Enden des Containers */
+  align-items: center; /* Zentriert die Buttons vertikal */
+}
+
+.button-group-right {
+  display: flex;
+  gap: 10px; /* Fügt einen Abstand zwischen den Buttons hinzu */
 }
 </style>

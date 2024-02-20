@@ -47,7 +47,7 @@ def delete_vehicle_endpoint(id: int, db: Session = Depends(get_db)):
     else:
         raise HTTPException(status_code=404, detail=f"Vehicle with ID {id} not found.")
 
-@router.put("/vehicles/{vehicle_id}", response_model=schemas.Vehicle)
+@router.put("/update_vehicles/{vehicle_id}", response_model=schemas.Vehicle)
 async def update_vehicle(vehicle_id: int, vehicle_update: schemas.VehicleUpdate, db: Session = Depends(get_db)):
     updated_vehicle = crud.update_vehicle(db, vehicle_id, vehicle_update)
     print("API2 %s" % update_vehicle)
