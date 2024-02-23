@@ -5,7 +5,6 @@
         <thead class="sticky-header">
           <tr>
             <th style="color: black; font-weight: bold; font-size: 18px;">Vehicle ID</th>
-            <th style="color: black; font-weight: bold; font-size: 18px;">User ID</th>
             <th style="color: black; font-weight: bold; font-size: 18px;">Username</th>
             <th style="color: black; font-weight: bold; font-size: 18px;">License Plate</th>
             <th style="color: black; font-weight: bold; font-size: 18px;">Tag</th>
@@ -18,7 +17,6 @@
         <tbody>
           <tr v-for="(vehicle, index) in vehicles" :key="index">
             <td style="font-size: 16px; color: black">{{ vehicle.VehicleID }}</td>
-            <td style="font-size: 16px; color: black">{{ vehicle.UsersID }}</td>
             <td style="font-size: 16px; color: black">{{ findUserName(vehicle.UsersID) }}</td>
             <td style="font-size: 16px; color: black">{{ vehicle.LicensePlate }}</td>
             <td style="font-size: 16px; color: black">{{ findTagName(vehicle.TagID) }}</td>
