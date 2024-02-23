@@ -6,8 +6,9 @@
           <tr>
             <th style="color: black; font-weight: bold; font-size: 18px;">Vehicle ID</th>
             <th style="color: black; font-weight: bold; font-size: 18px;">User ID</th>
+            <th style="color: black; font-weight: bold; font-size: 18px;">Username</th>
             <th style="color: black; font-weight: bold; font-size: 18px;">License Plate</th>
-            <th style="color: black; font-weight: bold; font-size: 18px;">Tag ID</th>
+            <th style="color: black; font-weight: bold; font-size: 18px;">Tag</th>
             <th style="color: black; font-weight: bold; font-size: 18px;">Permission ID</th>
             <th style="color: black; font-weight: bold; font-size: 18px;">Start Time</th>
             <th style="color: black; font-weight: bold; font-size: 18px;">End Time</th>
@@ -18,8 +19,9 @@
           <tr v-for="(vehicle, index) in vehicles" :key="index">
             <td style="font-size: 16px; color: black">{{ vehicle.VehicleID }}</td>
             <td style="font-size: 16px; color: black">{{ vehicle.UsersID }}</td>
+            <td style="font-size: 16px; color: black">{{ findUserName(vehicle.UsersID) }}</td>
             <td style="font-size: 16px; color: black">{{ vehicle.LicensePlate }}</td>
-            <td style="font-size: 16px; color: black">{{ vehicle.TagID }}</td>
+            <td style="font-size: 16px; color: black">{{ findTagName(vehicle.TagID) }}</td>
             <td style="font-size: 16px; color: black">{{ vehicle.PermissionID }}</td>
             <td style="font-size: 16px; color: black">{{ vehicle.StartTime }}</td>
             <td style="font-size: 16px; color: black">{{ vehicle.EndTime }}</td>
@@ -194,6 +196,16 @@ async function updateVehicle() {
     console.error('Error updating vehicle:', error);
     alert(`Failed to update vehicle: ${error.message}`);
   }
+}
+
+function findUserName(userId: number) {
+  const user = users.value.find(user => user.UserID === userId);
+  return user ? user.Username : 'Unbekannt';
+}
+
+function findTagName(tagId: number) {
+  const tag = tags.value.find(tag => tag.TagID === tagId);
+  return tag ? tag.TagName : 'Unbekannt';
 }
 </script>
 
