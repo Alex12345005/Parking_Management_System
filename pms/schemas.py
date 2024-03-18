@@ -5,17 +5,6 @@ from .models import *
 from datetime import datetime as dt
 
 
-
-# Define schema for Vehicle
-class Vehicle(BaseModel):
-    VehicleID: int
-    LicensePlate: str
-    UsersID: int
-    TagID: int
-    PermissionID: List[int]
-    StartTime: datetime
-    EndTime: datetime
-
 class VehicleCreate(BaseModel):
     LicensePlate: str
     UsersID: int

@@ -65,6 +65,13 @@ class Vehicle(Base):
 
     PermissionID = Column(Integer, ForeignKey('parking_permission.PermissionID'))
 
+    def to_dict(self):
+        return {
+            "licenseplate": self.LicensePlate,
+            "starttime": self.StartTime.isoformat() if self.StartTime else None,
+            "endtime": self.EndTime.isoformat() if self.EndTime else None,
+        }
+
 
 
 class Log(Base):
