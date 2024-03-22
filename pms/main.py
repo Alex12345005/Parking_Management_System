@@ -4,13 +4,13 @@ from fastapi import FastAPI, Request, Depends, HTTPException, status, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from .database import *
-from .routes import vehicles, users, tags, parking_permissions, vehicle_parking_permission
+from .routes import vehicles, users, tags, parking_permissions, vehicle_parking_permission, rasp
 from fastapi import Depends
 from . import crud, models, schemas
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_login.exceptions import InvalidCredentialsException
 from starlette.responses import RedirectResponse
-from datetime import timedelta  # Import timedelta
+from datetime import timedelta 
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -79,6 +79,7 @@ app.include_router(users.router, prefix="/users", tags=["users"])
 app.include_router(tags.router, prefix="/tags", tags=["tags"])
 app.include_router(parking_permissions.router, prefix="/parking_permissions", tags=["parking_permissions"])
 app.include_router(vehicle_parking_permission.router, prefix="/vehicle_parking_permissions", tags=["vehicle_parking_permissions"])
+app.include_router(rasp.router, prefix="/rasp", tags=["rasp"])
 
 class NotAuthenticatedException(Exception):
     pass

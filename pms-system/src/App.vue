@@ -2,7 +2,6 @@
 
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import VehicleDisplay from './components/VehicleDisplay.vue'
 
 const handleLogout = () => {
   localStorage.removeItem('access_token');
@@ -11,56 +10,55 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <div>
-    <div class="menu-button-wrapper">
-      <button class="uk-button uk-button-secondary uk-border-rounded uk-margin-small-right" type="button" uk-toggle="target: #offcanvas-nav-primary">Nav</button>
-    </div>
-    <div id="offcanvas-slide" uk-offcanvas></div>
-    <div id="offcanvas-nav-primary" uk-offcanvas="overlay: true">
-      <div class="uk-offcanvas-bar uk-flex uk-flex-column">
-        <ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
-          <li class="uk-active"><span uk-icon="home"></span><RouterLink to="/" class="link-text">Home</RouterLink></li>
-          <li class="uk-active"><span uk-icon="info"></span><RouterLink to="/about" class="link-text">About</RouterLink></li>
-          <li class="uk-nav-divider"></li>
-          <li><a href="#" @click.prevent="handleLogout" class="link-text">Logout</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="uk-container-expand">
+  <div class="app-container">
+    <nav class="sidebar">
+      <ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+        <li class="uk-active"><span uk-icon="home"></span><RouterLink to="/" class="link-text">Home</RouterLink></li>
+        <li class="uk-active"><span uk-icon="info"></span><RouterLink to="/about" class="link-text">About</RouterLink></li>
+        <li class="uk-nav-divider"></li>
+        <li><a href="#" @click.prevent="handleLogout" class="link-text">Logout</a></li>
+      </ul>
+    </nav>
+    <div class="main-content">
       <RouterView />
     </div>
   </div>
 </template>
 
-<style scoped>
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-    margin: 0 auto;
-  }
-  .menu-button-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: 1rem;
-  }
-  .link-text {
-    color: black;
-    font-size: 18px; 
-  }
-
-  .uk-button-secondary {
-    background-color: black;
-    color: white;
-    font-size: 18px; 
-  }
-
-  .uk-button-secondary.uk-border-rounded {
-    border-radius: 10px;
-  }
+<style>
+.app-container {
+  display: flex;
 }
+
+.sidebar {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack items vertically */
+  justify-content: center; /* Center items vertically */
+  align-items: center; /* Center items horizontally */
+  width: 250px; /* Adjust the width of the sidebar as needed */
+  height: 100vh; /* Full height of the viewport */
+  position: fixed; /* Fixed position */
+  left: 0; /* Stick to the left */
+  top: 0; /* Stick to the top */
+  overflow-y: auto; /* Enable vertical scrolling if necessary */
+  background-color: #282828;
+  color: white;
+}
+
+.main-content {
+  margin-left: 0px; /* Adjust this value to reduce the gap */
+  flex-grow: 1;
+}
+
+.sidebar .uk-nav-primary li a,
+.sidebar .uk-nav-primary li a:link,
+.sidebar .uk-nav-primary li a:visited,
+.sidebar .uk-nav-primary li a:hover,
+.sidebar .uk-nav-primary li a:active,
+.sidebar .uk-nav-primary li a:focus {
+  color: white !important; /* This will force the text color to be white */
+  font-size: 20px;
+}
+
+/* Additional styling and responsive design as needed */
 </style>

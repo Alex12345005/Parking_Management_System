@@ -17,7 +17,7 @@
   </div>
 </template>
   
-  <script lang="ts">
+<script lang="ts">
   import { defineComponent } from 'vue';
   import axios, { AxiosResponse } from 'axios';
   
@@ -81,54 +81,69 @@
       },
     },
   });
-  </script>
+</script>
 
 <style scoped>
 .login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: 400px;
+  margin: 50px auto;
   padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white;
 }
 
 .login-form {
-  width: 300px;
+  display: flex;
+  flex-direction: column;
 }
 
 label {
-  display: block;
-  margin-bottom: 5px;
+  color: black;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 input {
   width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .login-button {
-  background-color: #45a049;
+  background-color: #282828; /* A dark grey color */
   color: white;
-  padding: 10px;
+  padding: 14px 20px;
+  margin-top: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .login-button:hover {
-  background-color: #00506b;
+  background-color: #3e3e3e; /* A slightly lighter grey for hover effect */
 }
 
 .registration-link {
-  margin-top: 10px;
-  color: #45a049;
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #282828;
   text-decoration: none;
-  cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .registration-link:hover {
-  color: #00506b;
+  color: #3e3e3e;
+}
+
+/* If there's a need to adjust the form's alignment on larger screens */
+@media (min-width: 768px) {
+  .login-container {
+    padding: 40px;
+  }
 }
 </style>

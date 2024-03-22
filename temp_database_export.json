@@ -1,0 +1,74 @@
+{
+    "vehicles": [
+        {
+            "licenseplate": "neuneuneu",
+            "starttime": "2024-06-03T12:22:00",
+            "endtime": "2024-06-10T12:22:00"
+        },
+        {
+            "licenseplate": "test",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "test1",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "test2",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "test3",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "test4",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "test5",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "test6",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "test7",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "test8",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "test12",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "test112",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "edit geht",
+            "starttime": "2024-02-08T19:27:42.913000",
+            "endtime": "2024-02-08T19:27:42.913000"
+        },
+        {
+            "licenseplate": "postgeht",
+            "starttime": "2024-02-29T11:11:00",
+            "endtime": "2024-03-07T11:11:00"
+        }
+    ]
+}
