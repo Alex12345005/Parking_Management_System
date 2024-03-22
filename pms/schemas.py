@@ -75,6 +75,7 @@ class TagBase(BaseModel):
 class TagCreate(TagBase):
     """Schema for creating a Tag."""
     TagName: str
+    TagID: Optional[int] = None
 
 class Tag(TagBase):
     """Schema for reading a Tag."""
