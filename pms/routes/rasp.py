@@ -4,7 +4,6 @@ import shutil
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-
 from pms import models
 from .. import crud, schemas
 from ..database import get_db
@@ -13,6 +12,15 @@ router = APIRouter()
 
 @router.get("/backup-database")
 async def export_database_json(db: Session = Depends(get_db)):
+    """
+    Export the database to a JSON file.
+
+    Args:
+        db (Session): SQLAlchemy database session.
+
+    Returns:
+        FileResponse: File response containing the exported JSON file.
+    """
     users = db.query(models.Users).all()
     vehicles = db.query(models.Vehicle).all()
     
@@ -32,6 +40,16 @@ async def export_database_json(db: Session = Depends(get_db)):
 
 @router.post("/check-license")
 async def check_license(LicensePlate: str, db: Session = Depends(get_db)):
+    """
+    Check if a license plate exists in the database.
+
+    Args:
+        LicensePlate (str): The license plate to check.
+        db (Session): SQLAlchemy database session.
+
+    Returns:
+        dict: Dictionary indicating whether the license plate exists or not.
+    """
     vehicle = db.query(models.Vehicle).filter(models.Vehicle.LicensePlate == LicensePlate).first()
     if vehicle:
         return {"exists": True}

@@ -40,6 +40,16 @@ def read_vehicle(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
 
 @router.delete("/delete_vehicle/{id}")
 def delete_vehicle_endpoint(id: int, db: Session = Depends(get_db)):
+    """
+    Delete a vehicle by ID.
+
+    Args:
+        id (int): The ID of the vehicle to delete.
+        db (Session): SQLAlchemy database session.
+
+    Returns:
+        dict: A message confirming the deletion.
+    """
     vehicle = crud.get_vehicle_by_id(db, id)
     if vehicle:
         crud.delete_vehicle_by_id(db, id)
@@ -49,16 +59,32 @@ def delete_vehicle_endpoint(id: int, db: Session = Depends(get_db)):
 
 @router.put("/update_vehicles/{vehicle_id}", response_model=schemas.Vehicle)
 async def update_vehicle(vehicle_id: int, vehicle_update: schemas.VehicleUpdate, db: Session = Depends(get_db)):
+    """
+    Update a vehicle by ID.
+
+    Args:
+        vehicle_id (int): The ID of the vehicle to update.
+        vehicle_update (schemas.VehicleUpdate): Pydantic schema representing the vehicle update data.
+        db (Session): SQLAlchemy database session.
+
+    Returns:
+        schemas.Vehicle: The updated vehicle.
+    """
     updated_vehicle = crud.update_vehicle(db, vehicle_id, vehicle_update)
-    print("API2 %s" % update_vehicle)
     if updated_vehicle is None:
         raise HTTPException(status_code=404, detail="Vehicle not found")
     return updated_vehicle
 
 @router.options("/post_vehicle/", response_model=None)
 def options_post_vehicle():
+    """
+    Provides options for the endpoint to create a vehicle.
+    """
     return {}
 
 @router.options("/delete_vehicle/{id}", response_model=None)
 def options_delete_vehicle():
+    """
+    Provides options for the endpoint to delete a vehicle.
+    """
     return {}

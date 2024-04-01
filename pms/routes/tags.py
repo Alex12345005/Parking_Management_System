@@ -37,13 +37,30 @@ def get_tags_route(db: Session = Depends(get_db)):
 
 @router.get("/get_tags_name/", response_model=list[str])
 def get_tags_by_name(skip: int = 0, limit: int = 100, db: Session = Depends(database.get_db)):
+    """
+    Get tags by name with optional pagination.
+
+    Args:
+        skip (int): Number of items to skip.
+        limit (int): Number of items to retrieve.
+        db (Session): SQLAlchemy database session.
+
+    Returns:
+        List of tag names.
+    """
     tags = crud.get_tags_by_name(db, skip=skip, limit=limit)
     return tags
 
 @router.options("/get_tags_name/", response_model=None)
-def options_get_tagsname():
+def options_get_tags_name():
+    """
+    Provides options for the endpoint to retrieve tags by name.
+    """
     return {}
 
 @router.options("/get_tags/", response_model=None)
 def options_get_tags():
+    """
+    Provides options for the endpoint to retrieve all tags.
+    """
     return {}

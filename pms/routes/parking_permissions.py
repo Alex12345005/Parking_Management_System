@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from typing import List
 from .. import crud, schemas
 from ..database import get_db
 
@@ -20,7 +21,7 @@ def create_parking_permission_endpoint(permission_create: schemas.ParkingPermiss
     permission = crud.create_parking_permission(db, permission_create)
     return permission
 
-@router.get("/get_parking_permissions/", response_model=list[schemas.ParkingPermission])
+@router.get("/get_parking_permissions/", response_model=List[schemas.ParkingPermission])
 def get_parking_permission(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retrieve a list of parking permissions with optional pagination.
@@ -37,5 +38,8 @@ def get_parking_permission(skip: int = 0, limit: int = 100, db: Session = Depend
     return permissions
 
 @router.options("/get_parking_permissions/", response_model=None)
-def get_parking_permissions():
+def get_parking_permissions_options():
+    """
+    Provides options for the endpoint to retrieve parking permissions.
+    """
     return {}
