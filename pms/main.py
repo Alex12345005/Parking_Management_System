@@ -34,46 +34,50 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
+    """
+    Welcome endpoint.
+    """
     return {"Hello": "World"}
 
 SECRET = 'your-super-secret-key'
-# Add the necessary configurations for the LoginManager
 manager = LoginManager(
     SECRET,
     token_url='/login',
     use_cookie=True,
     cookie_name='custom-cookie-name',
     use_header=False,
-    default_expiry=timedelta(hours=12)  # Set default expiration for tokens
+    default_expiry=timedelta(hours=12)
 )
 
 @manager.user_loader()
 def load_user(email: str, db: Session = Depends(get_db)):
+    """
+    Load user from database based on email.
+    """
     user_data = users.query_user(db, email)
     if user_data:
         return user_data
     return None
 
-# Update the login route to use the set_cookie method
 @app.post('/login')
 def login(response: Response, data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    """
+    Endpoint to handle user login.
+    """
     print("Login post start")
-    print("Received data:", data.username, data.password)  # Print the received data
+    print("Received data:", data.username, data.password)
     username = data.username
     password = data.password
 
-    # Use the query_user function with the correct argument
     user = crud.get_user_by_username(db, username)
     print("This is the User:", user)
-    # Ensure user is an instance of schemas.Users
     if password == user.Password:
         access_token = manager.create_access_token(data={'sub': username})
-        manager.set_cookie(response, access_token)  # Set the cookie
+        manager.set_cookie(response, access_token)
         return {'access_token':access_token}
     else:
         raise InvalidCredentialsException
 
-# Include the routers in your main app
 app.include_router(vehicles.router, prefix="/vehicles", tags=["vehicles"])
 app.include_router(users.router, prefix="/users", tags=["users"])
 app.include_router(tags.router, prefix="/tags", tags=["tags"])
@@ -82,7 +86,9 @@ app.include_router(vehicle_parking_permission.router, prefix="/vehicle_parking_p
 app.include_router(rasp.router, prefix="/rasp", tags=["rasp"])
 
 class NotAuthenticatedException(Exception):
-    pass
+    """
+    Custom exception for unauthorized access.
+    """
 
 manager = LoginManager(
     SECRET,
@@ -102,34 +108,38 @@ def auth_exception_handler(request: Request, exc: NotAuthenticatedException):
 
 @app.get('/protected')
 def protected_route(user=Depends(manager)):
+    """
+    Protected route requiring authentication.
+    """
     return {'user': user}
 
 @app.get('/protected_optional')
 def protected_route_optional(user=Depends(manager.optional)):
+    """
+    Protected route optionally requiring authentication.
+    """
     if user is None:
-        # Do something for unauthorized users
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     
     return {'user': user}
 
-@manager.user_loader()
-def load_user(user_id, db: Session = Depends(get_db)):
-    """
-    Get a user from the db based on user ID
-    :param user_id: ID of the user
-    :param db: The currently active connection to the database
-    :return: None or the user object
-    """
-    return crud.get_user_by_id(db, user_id)
-
 @app.options("/login", response_model=None)
-def login():
+def login_options():
+    """
+    Options method for login route.
+    """
     return {}
 
 @app.options("/protected", response_model=None)
-def protected_route():
+def protected_route_options():
+    """
+    Options method for protected route.
+    """
     return {}
 
 @app.options("/protected_optional", response_model=None)
-def protected_route_optional():
+def protected_route_optional_options():
+    """
+    Options method for protected optional route.
+    """
     return {}

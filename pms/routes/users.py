@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import Optional
+from typing import Optional, List
 from .. import crud, schemas, models
 from ..database import get_db
-from typing import List
 
 
 router = APIRouter()
@@ -11,14 +10,14 @@ router = APIRouter()
 @router.post("/post_user/", response_model=schemas.Users)
 def create_user(user_info: schemas.UsersCreate, db: Session = Depends(get_db)):
     """
-    Create a new vehicle entry.
+    Create a new user entry.
 
     Args:
-        vehicle_info (schemas.VehicleCreate): Pydantic schema representing the vehicle data.
+        user_info (schemas.UsersCreate): Pydantic schema representing the user data.
         db (Session): SQLAlchemy database session.
 
     Returns:
-        schemas.Vehicle: The created vehicle.
+        schemas.Users: The created user.
     """
     created_user_info = crud.create_user(db, user_info)
     return created_user_info
@@ -29,7 +28,7 @@ def get_user(username: str, db: Session = Depends(get_db)):
     Get user details by username.
 
     Args:
-        email (str): username of the user.
+        username (str): Username of the user.
         db (Session): SQLAlchemy database session.
 
     Returns:
@@ -60,7 +59,7 @@ def get_salt(username: str, db: Session = Depends(get_db)):
 @router.get("/get_users/", response_model=List[schemas.Users])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
-    Retrieve a list of vehicles with optional pagination.
+    Retrieve a list of users with optional pagination.
 
     Args:
         skip (int): Number of items to skip.
@@ -68,15 +67,21 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
         db (Session): SQLAlchemy database session.
 
     Returns:
-        List[schemas.Vehicle]: List of retrieved vehicles.
+        List[schemas.Users]: List of retrieved users.
     """
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
 
 @router.options("/post_user/", response_model=None)
 def options_post_user():
+    """
+    Provides options for the endpoint to create a user.
+    """
     return {}
 
 @router.options("/get_users/", response_model=None)
-def options_get_user():
+def options_get_users():
+    """
+    Provides options for the endpoint to retrieve users.
+    """
     return {}
